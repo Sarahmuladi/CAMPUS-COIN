@@ -52,14 +52,37 @@ const App = () => {
         </nav>
         
 
-      {/* Hero Section */}
-      <div className="bg-[url('/Images/img1.jpg')] bg-cover bg-no-repeat bg-center h-screen w-screen">
-        <div><span>Your Campus, Your Coin</span></div>
-        <div><span>Smart Savings for Student Life</span></div>
-        {/* <div><img src="/Images/img1.jpg"/></div> */}
-        <button>Get Started</button>
-        <button>Learn More</button>
-      </div>
+      {/* HERO SECTION */}
+<div className="relative h-screen w-screen bg-cover bg-no-repeat bg-center" 
+     style={{ backgroundImage: "url('/Images/img1.jpg')" }}>
+  
+  {/* Overlay for better text contrast */}
+  <div className="absolute inset-0 bg-opacity-70"></div>
+
+  {/* Content Container */}
+  <div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-6">
+    
+    <h1 className="text-4xl md:text-5xl font-bold text-cream drop-shadow-xl">
+      Your Campus, Your Coin
+    </h1>
+    
+    <p className="text-lg md:text-2xl mt-3 text-gray-200 shadow-xl">
+      Smart Savings for Student Life
+    </p>
+
+    {/* Buttons */}
+    <div className="mt-6 flex gap-4">
+      <button className="px-6 py-3 bg-cream text-gray-900 font-semibold rounded-lg shadow-md hover:bg-yellow-200 transition">
+        Get Started
+      </button>
+      <button className="px-6 py-3 bg-transparent border border-cream text-cream font-semibold rounded-lg hover:bg-cream hover:text-gray-900 transition">
+        Learn More
+      </button>
+    </div>
+    
+  </div>
+</div>
+
 
       {/* Feature Cards */}
       <div>
