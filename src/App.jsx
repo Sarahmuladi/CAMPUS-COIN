@@ -1,6 +1,11 @@
 import React, {useState} from 'react'
 import { FaUser, FaPiggyBank, FaChartLine, FaLock } from 'react-icons/fa'
 import { FaSquareXTwitter, FaSquareFacebook, FaSquareInstagram } from 'react-icons/fa6'
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, Autoplay } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 
 
@@ -15,11 +20,70 @@ const App = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  //swiper
+  const features = [
+    {
+      title: "Savings Goal",
+      image: "/Images/img2.jpg",
+      description: "Set and track your savings goals, like a new laptop or dream trip, and watch your progress grow."
+    },
+    {
+      title: "Savings Lock",
+      image: "/Images/img9.jpg",
+      description: "Lock your savings for a set time to avoid impulsive spending and stay on track with your goals"
+    },
+    {
+      title: "Smart Budgeting",
+      image: "/Images/img8.jpg",
+      description: "Plan your spending with monthly budgets for food, transport, and more, so you never overspend"
+    },
+    {
+      title: "Tracking Expenses",
+      image: "/Images/img7.jpg",
+      description: "Log your daily expenses and see exactly where your money goes, helping you stay within your budget"
+    },
+    {
+      title: "Progress Tracking",
+      image: "/Images/imgX.jpg",
+      description: "Visualize your savings progress with graphs and charts to stay motivated."
+    },
+    {
+      title: "Mobile Money Integration",
+      image: "/Images/img10.jpg",
+      description: "Deposit, withdraw, and manage your money seamlessly with M-Pesa, Airtel Money, and more"
+    }
+  ];
+
+  //how it works
+  const steps = [
+    {
+      icon: <FaUser />,
+      title: "Create Your Account",
+      description: "Sign up in minutes with your email or mobile number."
+    },
+    {
+      icon: <FaPiggyBank />,
+      title: "Set Savings Goals",
+      description: "Define your goals, like saving for a laptop or trip."
+    },
+    {
+      icon: <FaChartLine />,
+      title: "Track Expenses",
+      description: "Log your daily expenses and stay within your budget."
+    },
+    {
+      icon: <FaLock />,
+      title: "Watch Your Savings Grow",
+      description: "Use Savings Lock to avoid spending and achieve your goals faster."
+    }
+  ];
+
+
 
 
   return (
     <>
-    <div>
+    <div className="overflow-x-hidden max-w-[100vw]">
       {/* NAVIGATION BAR */}
         <nav className='bg-primary text-white p-4'>
           <div className='container mx-auto flex justify-between items-center'>
@@ -62,11 +126,11 @@ const App = () => {
   {/* Content Container */}
   <div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-6">
     
-    <h1 className="text-4xl md:text-5xl font-bold text-cream drop-shadow-xl">
+    <h1 className="text-4xl md:text-5xl font-bold text-cream-900 drop-shadow-xl">
       Your Campus, Your Coin
     </h1>
     
-    <p className="text-lg md:text-2xl mt-3 text-gray-200 shadow-xl">
+    <p className="text-lg md:text-2xl mt-3 text-cream-400 shadow-xl">
       Smart Savings for Student Life
     </p>
 
@@ -84,102 +148,96 @@ const App = () => {
 </div>
 
 
-      {/* Feature Cards */}
-      <div>
-        <h3>KEY FEATURES</h3>
-        <div className="bg-[url('/Images/img2.jpg')] bg-contain bg-no-repeat bg-center h-screen w-full">
-          <h4>Savings Goal</h4>
-          <p>Set and track your savings goals, like a new laptop or dream trip, and watch your progress grow</p>
-        </div>
+      {/* FEATURE CARDS */}
+      <div className="w-full py-10 bg-gray-100">
+      <h3 className="text-4xl font-bold text-center text-gray-900 mb-8">Key Features</h3>
 
-        <div className="bg-[url('/Images/img9.jpg')] bg-contain bg-no-repeat bg-center h-screen w-full">
-          <h4>Savings Lock</h4>
-          <p>Lock your savings for a set time to avoid impulsive spending and stay on track with your goals</p>
-        </div>
+      <Swiper
+        modules={[Navigation, Pagination, Autoplay]}
+        spaceBetween={20}
+        slidesPerView={1}
+        loop={true}
+        navigation
+        pagination={{ clickable: true }}
+        autoplay={{ delay: 4000 }}
+        className="w-full max-w-4xl mx-auto"
+      >
+        {features.map((feature, index) => (
+          <SwiperSlide key={index}>
+            <div className="relative h-[500px] w-full bg-cover bg-center rounded-xl shadow-lg flex flex-col items-center justify-center text-white px-6"
+              style={{ backgroundImage: `url(${feature.image})` }}>
+              
+              <div className="absolute inset-0 bg-opacity-50 rounded-xl"></div>
 
-        <div className="bg-[url('/Images/img8.jpg')] bg-contain bg-no-repeat bg-center h-screen w-full">
-          <h4>Budgeting</h4>
-          <p>Plan your spending with monthly budgets for food, transport, and more, so you never overspend</p>
-        </div>
-
-        <div className="bg-[url('/Images/img7.jpg')] bg-contain bg-no-repeat bg-center h-screen w-full">
-          <h4>Tracking Expenses</h4>
-          <p>Log your daily expenses and see exactly where your money goes, helping you stay within your budget</p>
-        </div>
-
-        <div className="bg-[url('/Images/img10.jpg')] bg-contain bg-no-repeat bg-center h-screen w-full">
-          <h4>Mobile Money Integration</h4>
-          <p>Deposit, withdraw and manage your money seamlessly with M-Pesa, Airtel Money and more</p>
-        </div>
-      </div>
+              <div className="relative z-10 text-center">
+                <h4 className="text-2xl font-semibold text-text drop-shadow-lg">{feature.title}</h4>
+                <p className="mt-3 text-lg drop-shadow-md text-text-secondary">{feature.description}</p>
+              </div>
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    </div>
 
       {/* How it Works */}
-      <div>
-        <h3>HOW CAMPUS COIN WORKS</h3>
-        <p>Saving smarter is just a few steps away</p>
-        <div>
-          <FaUser/>
-          <h4>Create Your Account</h4>
-          <p>Sign up in minutes with your email or mobile number</p>
-        </div>
+      <div className="bg-gray-100 py-16 px-6 text-center">
+      <h3 className="text-4xl font-bold text-gray-900 mb-4">How CampusCoin Works</h3>
+      <p className="text-lg text-gray-700 mb-10">Saving smarter is just a few steps away</p>
 
-        <div>
-          <FaPiggyBank/>
-          <h4>Set Savings Goals</h4>
-          <p>Define your goals, like saving for a laptop or trip</p>
-        </div>
-
-        <div>
-          <FaChartLine/>
-          <h4>Track Expenses</h4>
-          <p>Log your daily expenses and stay within your budget</p>
-        </div>
-
-        <div>
-          <FaLock/>
-          <h4>Watch your savings grow</h4>
-          <p>Use Savings Lock to avoid spending and achieve your goals faster</p>
-        </div>
-
-        <button>Get Started</button>
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-5xl mx-auto">
+        {steps.map((step, index) => (
+          <div key={index} className="bg-white p-6 rounded-xl shadow-md flex flex-col items-center text-center transition-transform transform hover:scale-105">
+            <div className="text-4xl text-cream bg-gray-200 p-4 rounded-full mb-4">{step.icon}</div>
+            <h4 className="text-xl font-semibold text-gray-800">{step.title}</h4>
+            <p className="text-gray-600 mt-2">{step.description}</p>
+          </div>
+        ))}
       </div>
 
-      {/* Footer */}
-      <div>
-        <ul>
-          <li>
-            <div>
-            <h4>CAMPUS COIN</h4>
-            <FaSquareFacebook/>
-            <FaSquareInstagram/>
-            <FaSquareXTwitter/>
-            </div>
-            </li>
+      <button 
+      className="mt-10 px-6 py-3 bg-cream text-text-secondary font-semibold rounded-xl shadow-md hover:bg-yellow-200 transition-all">
+      Get Started
+      </button>
+    </div>
 
-          <li>
-          <div>
-            <h4>CONTACT US</h4>
-            <p>+255 767946838</p>
-            <p>info@campuscoin.com</p>
-            </div>
-          </li>
+      {/* FOOTER */}
+    <footer className="bg-[#2E3A59] text-white py-10 px-6">
+      <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center text-center md:text-left">
+        
+        {/* Logo & Social Icons */}
+        <div className="mb-6 md:mb-0">
+          <h4 className="text-2xl font-bold">CAMPUS COIN</h4>
+          <div className="flex justify-center md:justify-start gap-4 mt-3">
+            <FaSquareFacebook className="text-2xl hover:text-[#2ECC71] transition-all cursor-pointer" />
+            <FaSquareInstagram className="text-2xl hover:text-[#2ECC71] transition-all cursor-pointer" />
+            <FaSquareXTwitter className="text-2xl hover:text-[#2ECC71] transition-all cursor-pointer" />
+          </div>
+        </div>
 
-          <li>
-          <div>
-            <h4>QUICK LINKS</h4>
-            <p><a>About</a></p>
-            <p><a>Features</a></p>
-            <p><a>Privacy Policy</a></p>
-            <p><a>Terms and Conditions</a></p>
-            </div>
-          </li>
-        </ul>
+        {/* Contact Section */}
+        <div className="mb-6 md:mb-0">
+          <h4 className="text-lg font-semibold">CONTACT US</h4>
+          <p className="text-gray-300 mt-2">+255 767 946 838</p>
+          <p className="text-gray-300">info@campuscoin.com</p>
+        </div>
+
+        {/* Quick Links */}
+        <div>
+          <h4 className="text-lg font-semibold">QUICK LINKS</h4>
+          <ul className="mt-2 space-y-2">
+            <li><a href="#" className="hover:text-[#2ECC71] transition-all">About</a></li>
+            <li><a href="#" className="hover:text-[#2ECC71] transition-all">Features</a></li>
+            <li><a href="#" className="hover:text-[#2ECC71] transition-all">Privacy Policy</a></li>
+            <li><a href="#" className="hover:text-[#2ECC71] transition-all">Terms and Conditions</a></li>
+          </ul>
+        </div>
       </div>
 
-      <div>
-        <p>&copy; 2025 Campus Coin. All rights reserved.</p>
+      {/* Bottom Section */}
+      <div className="text-center mt-8 border-t border-gray-500 pt-4 text-gray-300 text-sm">
+        &copy; 2025 Campus Coin. All rights reserved.
       </div>
-
+    </footer>
 
 
 
