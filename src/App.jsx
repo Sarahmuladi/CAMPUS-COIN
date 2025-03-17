@@ -5,9 +5,10 @@ import AboutUs from './pages/aboutUs'
 import Dashboard from './pages/dashboard'
 import SignIn from './pages/signIn'
 import SignUp from './pages/signUp'
-import Profile from './pages/profile'
 import PrivacyPolicy from './pages/privacyPolicy'
 import TermsAndConditions from './pages/termsAndConditions'
+import Features from './pages/features'
+import UserProfile from './pages/userProfile'
 
 
 const App = () => {
@@ -19,9 +20,10 @@ const App = () => {
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/signIn" element={<SignIn />} />
       <Route path="/signUp" element={<SignUp />} />
-      <Route path="/profile" element={<Profile/>} />
       <Route path="/privacyPolicy" element={<PrivacyPolicy />} />
       <Route path="/termsAndConditions" element={<TermsAndConditions />} />
+      <Route path="/features" element={<Features />} />
+      <Route path="/userProfile" element={<UserProfile />} />
     </Routes>
     </BrowserRouter>
     

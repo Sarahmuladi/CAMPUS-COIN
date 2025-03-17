@@ -7,7 +7,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Link } from 'react-router-dom';
-
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -79,6 +79,16 @@ const Home = () => {
     }
   ];
 
+  //buttons
+  const navigate = useNavigate();
+
+  const handleGetStarted = () => {
+    navigate('/signIn')
+  }
+
+  const handleLearnMore = () => {
+    navigate('/features')
+  }
 
 
 
@@ -112,7 +122,7 @@ const Home = () => {
           className={`${isMenuOpen ? 'flex' : 'hidden'}
            md:hidden flex-col items-center space-y-4 mt-4`}
            >
-         <li><Link to="/" className="block py-2 hover:text-text-secondary">Home</Link></li>
+         <li><Link to="/" className="block py-2 border-0 hover:text-[#2ECC71] transition-all">Home</Link></li>
          <li><Link to="/aboutUs" className="block py-2 hover:text-text-secondary">About Us</Link></li>
          <li><Link to="/dashboard" className="block py-2 hover:text-text-secondary">Dashboard</Link></li>
          <li><Link to="/signIn" className="block py-2 hover:text-text-secondary">Sign In</Link></li>
@@ -140,11 +150,18 @@ const Home = () => {
 
     {/* Buttons */}
     <div className="mt-6 flex gap-4">
-      <button className="px-6 py-3 bg-cream text-gray-900 font-semibold rounded-lg shadow-md hover:bg-yellow-200 transition">
-        Get Started
+      <button 
+      className="px-6 py-3 bg-cream text-gray-900 font-semibold rounded-lg shadow-md hover:bg-red-500 transition-all"
+      onClick={handleGetStarted}
+      >
+      Get Started
       </button>
-      <button className="px-6 py-3 bg-transparent border border-cream text-cream font-semibold rounded-lg hover:bg-cream hover:text-gray-900 transition">
-        Learn More
+
+      <button 
+      className="px-6 py-3 bg-transparent border border-cream text-cream font-semibold rounded-lg hover:bg-cream hover:text-gray-900 transition"
+      onClick={handleLearnMore}
+      >
+      Learn More
       </button>
     </div>
     
@@ -199,7 +216,9 @@ const Home = () => {
       </div>
 
       <button 
-      className="mt-10 px-6 py-3 bg-cream text-text-secondary font-semibold rounded-xl shadow-md hover:bg-yellow-200 transition-all">
+      className="mt-10 px-6 py-3 bg-cream text-text font-semibold rounded-xl shadow-md hover:bg-red-500 transition-all"
+      onClick={handleGetStarted}
+      >
       Get Started
       </button>
     </div>
