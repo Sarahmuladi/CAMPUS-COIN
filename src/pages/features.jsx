@@ -1,6 +1,8 @@
 import React from 'react'
 import { FaPiggyBank, FaChartLine, FaLock, FaBell, FaUsers } from "react-icons/fa";
+import { SiActualbudget } from 'react-icons/si';
 import { useNavigate } from 'react-router-dom';
+import { FaMobileAlt } from 'react-icons/fa';
 
 export default function Features() {
 
@@ -54,7 +56,7 @@ const features = [
   {
     icon: <FaPiggyBank />,
     title: "Savings Goal",
-    description: "Set and track your savings goals, like a laptop or trip, and monitor your progress.",
+    description: "Set and track your savings goals, like a laptop or dream trip, and monitor your progress.",
   },
   {
     icon: <FaChartLine />,
@@ -71,4 +73,14 @@ const features = [
     title: "Smart Alerts",
     description: "Receive reminders and alerts for upcoming expenses and savings goals.",
   },
+  {
+    icon: < SiActualbudget />,
+    title: "Smart Budgeting",
+    description: "Plan your spending with monthly budgets for food, transport, and more, so you never overspend"
+  },
+  {
+    icon: <FaMobileAlt/>,
+    title: "Mobile Money Integration",
+    description: "Deposit, withdraw, and manage your money seamlessly with M-Pesa, Airtel Money, and more"
+  }
 ];

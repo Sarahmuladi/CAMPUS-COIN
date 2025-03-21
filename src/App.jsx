@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Home from './pages/home'
 import AboutUs from './pages/aboutUs'
 import Dashboard from './pages/dashboard'
@@ -16,15 +16,23 @@ import ExpenseTracking from './pages/Dashboard/expensesTracking'
 import ProgressTracking from './pages/Dashboard/progressTracking'
 import MobileMoney from './pages/Dashboard/mobileMoneyIntegration'
 import Settings from './pages/Dashboard/settings'
+import { useAuthContext } from './Hooks/useAuthContext'
+//import { ProtectedRoute } from './pages/protectedRoutes';
+import { AuthProvider } from './components/Context/AuthContext'
+import { ProtectedRoute } from './pages/protectedRoutes'
 
 
 const App = () => {
+
+  const {user} = useAuthContext();
+
   return (
-    <BrowserRouter>
+    //<BrowserRouter>
+    <AuthProvider>
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/aboutUs" element={<AboutUs />} />
-      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/dashboard" element={ <ProtectedRoute><Dashboard/></ProtectedRoute>} />
       <Route path="/signIn" element={<SignIn />} />
       <Route path="/signUp" element={<SignUp />} />
       <Route path="/privacyPolicy" element={<PrivacyPolicy />} />
@@ -39,7 +47,8 @@ const App = () => {
       <Route path="/mobileMoneyIntegration" element={<MobileMoney />} />
       <Route path="/settings" element={<Settings />} />
     </Routes>
-    </BrowserRouter>
+    </AuthProvider>
+    //</BrowserRouter>
     
   )
 }

@@ -1,5 +1,19 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom';
+
+
+
+
+
+
 export default function TermsAndConditions() {
+
+const navigate = useNavigate();
+
+const handleClick = () => {
+  navigate('/signUp')
+}
+
   return (
     <div className="min-h-screen bg-[#F4F7FA] p-6">
       <div className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-lg">
@@ -30,8 +44,10 @@ export default function TermsAndConditions() {
           Violation of these terms may result in account suspension or termination.
         </p>
 
-        <button className="mt-6 w-full bg-[#FF6F61] text-white py-2 rounded-md font-bold hover:bg-red-500">
-          Accept & Continue
+        <button 
+        onClick={handleClick}
+        className="mt-6 w-full bg-[#FF6F61] text-white py-2 rounded-md font-bold hover:bg-red-500">
+        Accept & Continue
         </button>
       </div>
     </div>

@@ -131,11 +131,11 @@ const Home = () => {
         
 
       {/* HERO SECTION */}
-<div className="relative h-screen w-screen bg-cover bg-no-repeat bg-center" 
+<div className="relative z-10 h-screen w-screen bg-cover bg-no-repeat bg-center bg-opacity-30" 
      style={{ backgroundImage: "url('/Images/img1.jpg')" }}>
   
   {/* Overlay for better text contrast */}
-  <div className="absolute inset-0 bg-opacity-70"></div>
+  <div className="absolute inset-0  bg-opacity-70"></div>
 
   {/* Content Container */}
   <div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-6">
@@ -144,7 +144,7 @@ const Home = () => {
       Your Campus, Your Coin
     </h1>
     
-    <p className="text-lg md:text-2xl mt-3 text-cream-400 shadow-xl">
+    <p className="text-lg md:text-2xl mt-3 text-cream-400 drop-shadow-xl">
       Smart Savings for Student Life
     </p>
 
@@ -200,7 +200,7 @@ const Home = () => {
       </Swiper>
     </div>
 
-      {/* How it Works */}
+      {/* HOW IT WORKS */}
       <div className="bg-gray-100 py-16 px-6 text-center">
       <h3 className="text-4xl font-bold text-gray-900 mb-4">How CampusCoin Works</h3>
       <p className="text-lg text-gray-700 mb-10">Saving smarter is just a few steps away</p>

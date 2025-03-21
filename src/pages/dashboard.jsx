@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { FaUser, FaCog, FaSignOutAlt, FaChartPie, FaChartBar, FaMoneyBillWave, FaBell } from "react-icons/fa";
+import { TbLogout } from "react-icons/tb";
 import { Button, Card, CardContent } from "../components/ui";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { useNavigate } from 'react-router-dom';
+import { useSignOut } from "../Hooks/useSignOut";
+import { useAuthContext } from "../Hooks/useAuthContext";
+import { AuthContext } from "../components/Context/AuthContext";
 
 const Dashboard = () => {
   const [balance, setBalance] = useState(100000);
@@ -27,6 +31,15 @@ const Dashboard = () => {
     navigate('/userProfile');
   };
 
+  const {signout} = useSignOut();
+
+  const handleLogout = () => {
+    signout();
+    navigate('/signIn')
+  }
+
+  const {user} = useContext(AuthContext);
+
   return (
     <div className="bg-[#2E3A59] min-h-screen text-white p-6">
       {/* Side Navigation */}
@@ -37,7 +50,7 @@ const Dashboard = () => {
             <span className="text-secondary">Coin</span>
             </h2>
         </div>
-        <ul className="space-y-4">
+        <ul className="space-y-3">
           <li><Button onClick={() => navigate("/dashboard")} className="text-white flex items-center gap-2"><FaChartPie /> Dashboard</Button></li>
           <li><Button onClick={() => navigate("/savingsLock")} className="text-white flex items-center gap-2"><FaMoneyBillWave /> Savings Lock</Button></li>
           <li><Button onClick={() => navigate("/savingsGoal")} className="text-white flex items-center gap-2"><FaChartBar /> Savings Goal</Button></li>
@@ -47,15 +60,15 @@ const Dashboard = () => {
           <li><Button onClick={() => navigate("/mobileMoneyIntegration")} className="text-white flex items-center gap-2"><FaMoneyBillWave /> Mobile Money Integration</Button></li>
           <li><Button onClick={() => navigate("/settings")} className="text-white flex items-center gap-2"><FaCog /> Settings</Button></li>
           <li><Button onClick={() => handleUserProfile()} className="text-white flex items-center gap-2"><FaUser /> Profile</Button></li>
-          <li><Button onClick={() => navigate("/login")} className="text-white flex items-center gap-2"><FaCog /> Logout</Button></li>
+          <li><Button onClick={handleLogout} className="text-white flex items-center gap-2"><TbLogout /> Logout</Button></li>
         </ul>
       </nav>
 
       {/* Main Content */}
-      <div className="ml-64 p-6">
+      <div className="ml-60 mr-40 p-6">
         {/* Welcome Section */}
         <section className="text-center my-6">
-          <h2 className="text-xl font-semibold">Welcome, User!</h2>
+          {user && <h2 className="text-xl font-semibold"><span>Welcome, {user?.name || "Guest" }!</span></h2>}
         </section>
 
         {/* Current Balance & Savings Progress */}

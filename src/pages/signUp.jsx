@@ -1,17 +1,32 @@
 import React from 'react'
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
+import useSignUp from '../Hooks/useSignUp';
+import { AuthContext } from '../components/Context/AuthContext';
 
 export default function SignUp() {
-  const [form, setForm] = useState({ name: "", email: "", password: "" });
+ 
+  const [fullName, setFullName] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  const { signup, error, isLoading } = useSignUp()
 
-  const handleSignUp = (e) => {
+  const {signup: userRegister} = useContext(AuthContext);
+
+  
+
+  const  handleSignUp = (e) => {
     e.preventDefault();
-    console.log("Signing up with:", form);
+    try {
+
+      const user = userRegister( fullName, email, password)
+      console.log(user);
+      
+    } catch (error) {
+      console.error("Login failed:", error);
+      setError("Network error, please try again.");
+    }
   };
 
   return (
@@ -21,22 +36,26 @@ export default function SignUp() {
         <form onSubmit={handleSignUp} className="mt-6">
           <div>
             <label className="block font-medium">Full Name</label>
-            <input type="text" name="name" value={form.name} onChange={handleChange}
+            <input type="text" name="name" value={fullName} onChange= {(e) =>setFullName(e.target.value)}
               className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-[#FF6F61]" required />
           </div>
           <div className="mt-4">
             <label className="block font-medium">Email</label>
-            <input type="email" name="email" value={form.email} onChange={handleChange}
+            <input type="email" name="email" value={email} onChange={(e) =>setEmail(e.target.value)}
               className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-[#FF6F61]" required />
           </div>
           <div className="mt-4">
             <label className="block font-medium">Password</label>
-            <input type="password" name="password" value={form.password} onChange={handleChange}
+            <input type="password" name="password" value={password} onChange={(e) =>setPassword(e.target.value)}
               className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-[#FF6F61]" required />
           </div>
-          <button type="submit" className="w-full mt-6 bg-[#FF6F61] text-white py-2 rounded-md font-bold hover:bg-red-500">
+          <button 
+          disabled={isLoading}
+          type="submit" 
+          className="w-full mt-6 bg-[#FF6F61] text-white py-2 rounded-md font-bold hover:bg-red-500">
             Sign Up
           </button>
+          {error && <div className='text-red-600'>{error}</div>}
         </form>
         <p className="mt-4 text-center text-sm">
           Already have an account? <Link to="/signin" className="text-[#2ECC71] hover:underline">Sign In</Link>
