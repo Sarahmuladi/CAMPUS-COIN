@@ -24,16 +24,21 @@ export default function SignIn() {
 
   const handleSignIn = async (e) => {
     e.preventDefault();
+    setError(null);
   
-    try {
+     try {
 
-      const user = userLogin( email, password)
-      console.log(user);
+       const user = await userLogin( email, password)
+       console.log(user);
       
-    } catch (error) {
-      console.error("Login failed:", error);
-      setError("Network error, please try again.");
-    }
+     } catch (error) {
+       console.error("Login failed:", error);
+       // Display error message on the page
+      setError(error.message);
+     }
+
+    
+    
   };
 
  

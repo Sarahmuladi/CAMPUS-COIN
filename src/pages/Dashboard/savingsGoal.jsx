@@ -1,42 +1,82 @@
-import React, { useState } from "react";
-import { FaDollarSign, FaCalendarAlt, FaCheckCircle, FaTrashAlt } from "react-icons/fa";
-import { FaClock } from "react-icons/fa";
+import React, { useState, useEffect, useContext } from "react";
+import { FaDollarSign, FaCalendarAlt, FaCheckCircle, FaTrashAlt, FaClock } from "react-icons/fa";
 import { Button, Card, CardContent } from "../../components/ui";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { AuthContext } from "../../components/Context/AuthContext";
+
+
 
 const SavingsGoal = () => {
   const [goalName, setGoalName] = useState("");
   const [goalAmount, setGoalAmount] = useState();
   const [currentAmount, setCurrentAmount] = useState();
+  const [goalDeadline, setGoalDeadline] = useState();
   const [goals, setGoals] = useState([]);
-  const [goalDeadline, setGoalDeadline] = useState("");
   const navigate = useNavigate();
 
-  const handleAddGoal = () => {
+    const { user } = useContext(AuthContext);
+
+  // Fetch goals from backend on mount
+  useEffect(() => {
+    const fetchGoals = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/api/savingsGoal/get");
+        setGoals(response.data); 
+      } catch (error) {
+        console.error("Error fetching goals:", error);
+      }
+    };
+
+    fetchGoals();
+  }, []);
+
+  // Add goal to backend
+  const handleAddGoal = async () => {
     if (goalName && goalAmount > 0 && currentAmount >= 0 && goalDeadline) {
-      const newGoal = {
-        name: goalName,
-        goalAmount,
-        currentAmount,
-        deadline: goalDeadline,
-        id: Date.now(),
+      const newGoal = { 
+        userId: user._id,
+        goalName: goalName, 
+        goalAmount: Number(goalAmount), 
+        currentAmount: Number(currentAmount), 
+        goalDeadline: new Date(goalDeadline).toISOString() 
       };
-      setGoals([...goals, newGoal]);
-      resetForm();
+  
+      try {
+        const response = await axios.post("http://localhost:5000/api/savingsGoal/create", {newGoal}, {
+          headers: { "Content-Type": "application/json" }
+        });
+  
+        console.log("New goal added:", response.data); 
+  
+        setGoals((prevGoals) => [...prevGoals, response.data]); 
+        resetForm();
+      } catch (error) {
+        console.error("Error adding goal:", error);
+      }
+    }
+  };
+  
+
+  // Delete goal from backend
+  const handleDeleteGoal = async (id) => {
+    try {
+      await axios.delete(`http://localhost:5000/api/savingsGoal/delete/${id}`);
+      setGoals(goals.filter((goal) => goal._id !== id));
+    } catch (error) {
+      console.error("Error deleting goal:", error);
     }
   };
 
-  const handleDeleteGoal = (id) => {
-    setGoals(goals.filter((goal) => goal.id !== id));
-  };
-
+  // Reset form inputs
   const resetForm = () => {
     setGoalName("");
-    setGoalAmount();
-    setCurrentAmount();
+    setGoalAmount( );
+    setCurrentAmount( );
     setGoalDeadline("");
   };
 
+  // Calculate progress percentage
   const calculateProgress = (goalAmount, currentAmount) => {
     return (currentAmount / goalAmount) * 100;
   };
@@ -49,9 +89,21 @@ const SavingsGoal = () => {
           <h2 className="text-2xl font-semibold text-white">Savings Goal</h2>
         </div>
         <ul className="space-y-4">
-          <li><Button onClick={() => navigate("/dashboard")} className="text-white flex items-center gap-2"><FaDollarSign /> Dashboard</Button></li>
-          <li><Button onClick={() => navigate("/savingsLock")} className="text-white flex items-center gap-2"><FaCalendarAlt /> Savings Lock</Button></li>
-          <li><Button onClick={() => navigate("/settings")} className="text-white flex items-center gap-2"><FaClock /> Settings</Button></li>
+          <li>
+            <Button onClick={() => navigate("/dashboard")} className="text-white flex items-center gap-2">
+              <FaDollarSign /> Dashboard
+            </Button>
+          </li>
+          <li>
+            <Button onClick={() => navigate("/savingsLock")} className="text-white flex items-center gap-2">
+              <FaCalendarAlt /> Savings Lock
+            </Button>
+          </li>
+          <li>
+            <Button onClick={() => navigate("/settings")} className="text-white flex items-center gap-2">
+              <FaClock /> Settings
+            </Button>
+          </li>
         </ul>
       </nav>
 
@@ -78,15 +130,15 @@ const SavingsGoal = () => {
                 <input
                   type="number"
                   value={goalAmount}
-                  onChange={(e) => setGoalAmount((e.target.value))}
+                  onChange={(e) => setGoalAmount(e.target.value)}
                   className="w-full mt-4 p-2 text-black rounded"
                   placeholder="Target Amount"
                 />
                 <input
                   type="number"
                   value={currentAmount}
-                  onChange={(e) => setCurrentAmount((e.target.value))}
-                  className="w-full mt-4 p-2  text-black rounded"
+                  onChange={(e) => setCurrentAmount(e.target.value)}
+                  className="w-full mt-4 p-2 text-black rounded"
                   placeholder="Current Savings"
                 />
                 <input
@@ -115,12 +167,14 @@ const SavingsGoal = () => {
               <div className="text-center text-lg text-gray-300">No goals added yet.</div>
             ) : (
               goals.map((goal) => (
-                <Card key={goal.id} className="p-4 flex justify-between items-center bg-[#1F2A3A]">
+                <Card key={goal._id} className="p-4 flex justify-between items-center bg-[#1F2A3A]">
                   <div className="flex flex-col">
                     <h4 className="text-lg font-semibold">{goal.name}</h4>
                     <p className="text-sm text-gray-300">Target: Tsh {goal.goalAmount}</p>
                     <p className="text-sm text-gray-300">Current: Tsh {goal.currentAmount}</p>
-                    <p className="text-sm text-gray-300">Deadline: {new Date(goal.deadline).toLocaleDateString()}</p>
+                    <p className="text-sm text-gray-300">
+                      Deadline: {goal.goalDeadline ? new Date(goal.goalDeadline).toLocaleDateString() : "Invalid Date"}
+                    </p>
                   </div>
                   <div className="flex flex-col items-end">
                     <div className="w-32 h-2 bg-gray-300 rounded-full mt-2">
@@ -134,10 +188,7 @@ const SavingsGoal = () => {
                     <div className="text-xs text-gray-300 mt-2">
                       {Math.floor(calculateProgress(goal.goalAmount, goal.currentAmount))}% completed
                     </div>
-                    <Button
-                      onClick={() => handleDeleteGoal(goal.id)}
-                      className="mt-4 text-red-500 hover:bg-transparent"
-                    >
+                    <Button onClick={() => handleDeleteGoal(goal._id)} className="mt-4 text-red-500 hover:bg-transparent">
                       <FaTrashAlt /> Delete Goal
                     </Button>
                   </div>
@@ -146,7 +197,7 @@ const SavingsGoal = () => {
             )}
           </div>
         </section>
-        
+
         {/* Footer */}
         <section className="mt-6 text-center text-sm text-gray-300">
           <p>&copy; 2025 Campus Coin. All rights reserved.</p>
@@ -157,3 +208,4 @@ const SavingsGoal = () => {
 };
 
 export default SavingsGoal;
+

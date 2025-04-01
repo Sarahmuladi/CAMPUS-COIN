@@ -1,17 +1,32 @@
-import React, { useState } from "react";
-import { FaPlus, FaChartPie, FaExclamationTriangle } from "react-icons/fa";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { FaPlus, FaExclamationTriangle } from "react-icons/fa";
 import { Button, Card, CardContent } from "../../components/ui";
-import { useNavigate } from "react-router-dom";
 import { PieChart, Pie, Cell, Tooltip } from "recharts";
 
+
 const SmartBudgeting = () => {
-  const [income, setIncome] = useState();
+  const [income, setIncome] = useState("");
   const [expenses, setExpenses] = useState([]);
   const [category, setCategory] = useState("");
   const [amount, setAmount] = useState("");
-  const navigate = useNavigate();
+  const [budgetData, setBudgetData] = useState(null); 
 
   const COLORS = ["#FF5733", "#2ECC71", "#FFC300", "#3498DB", "#8E44AD"];
+
+  // Fetch data on component mount
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/api/savings/get")
+      .then((response) => {
+        const data = response.data[0] || {}; 
+        setIncome(data.income || "");
+        setExpenses(data.expenses || []);
+      })
+      .catch((error) => {
+        console.error("Error fetching budget data", error);
+      });
+  }, []);
 
   const addExpense = () => {
     if (category && amount > 0) {
@@ -29,6 +44,24 @@ const SmartBudgeting = () => {
     value: exp.amount,
     color: COLORS[index % COLORS.length],
   }));
+
+  const saveBudget = () => {
+    const budget = {
+      income,
+      expenses,
+      
+    };
+
+    axios
+      .post("http://localhost:5000/api/savings/add", budget)
+      .then((response) => {
+        console.log("Budget saved successfully", response.data);
+      })
+      .catch((error) => {
+        console.error("Error saving budget data", error);
+      });
+      alert("budget saved successfully")
+  };
 
   return (
     <div className="bg-[#2E3A59] min-h-screen text-white p-6">
@@ -114,8 +147,15 @@ const SmartBudgeting = () => {
           </CardContent>
         </Card>
       </section>
+
+      <section className="mt-6 text-center">
+        <Button onClick={saveBudget} className="w-full bg-[#FF5733]">
+          Save Budget
+        </Button>
+      </section>
     </div>
   );
 };
 
 export default SmartBudgeting;
+

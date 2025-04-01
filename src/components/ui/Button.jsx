@@ -1,4 +1,3 @@
-// filepath: c:\Users\HP\campus-coin\src\components\ui\Button.jsx
 import React from 'react';
 
 const Button = ({ children, className, ...props }) => {

@@ -17,7 +17,6 @@ import ProgressTracking from './pages/Dashboard/progressTracking'
 import MobileMoney from './pages/Dashboard/mobileMoneyIntegration'
 import Settings from './pages/Dashboard/settings'
 import { useAuthContext } from './Hooks/useAuthContext'
-//import { ProtectedRoute } from './pages/protectedRoutes';
 import { AuthProvider } from './components/Context/AuthContext'
 import { ProtectedRoute } from './pages/protectedRoutes'
 
@@ -27,8 +26,8 @@ const App = () => {
   const {user} = useAuthContext();
 
   return (
-    //<BrowserRouter>
-    <AuthProvider>
+    // <BrowserRouter>
+     <AuthProvider> 
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/aboutUs" element={<AboutUs />} />
@@ -47,8 +46,8 @@ const App = () => {
       <Route path="/mobileMoneyIntegration" element={<MobileMoney />} />
       <Route path="/settings" element={<Settings />} />
     </Routes>
-    </AuthProvider>
-    //</BrowserRouter>
+     </AuthProvider> 
+    // </BrowserRouter>
     
   )
 }

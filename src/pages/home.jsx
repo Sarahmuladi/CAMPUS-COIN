@@ -83,7 +83,7 @@ const Home = () => {
   const navigate = useNavigate();
 
   const handleGetStarted = () => {
-    navigate('/signIn')
+    navigate('/signUp')
   }
 
   const handleLearnMore = () => {
@@ -131,11 +131,14 @@ const Home = () => {
         
 
       {/* HERO SECTION */}
-<div className="relative z-10 h-screen w-screen bg-cover bg-no-repeat bg-center bg-opacity-30" 
+ <div className="relative z-10 h-screen w-screen bg-cover bg-no-repeat bg-center bg-opacity-30" 
      style={{ backgroundImage: "url('/Images/img1.jpg')" }}>
   
   {/* Overlay for better text contrast */}
-  <div className="absolute inset-0  bg-opacity-70"></div>
+  <div className="absolute inset-0  bg-opacity-70"></div> 
+
+  
+
 
   {/* Content Container */}
   <div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-6">

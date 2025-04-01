@@ -1,29 +1,56 @@
-import React, { useState } from "react";
-import { FaPlus, FaChartPie, FaTrash } from "react-icons/fa";
+import React, { useState, useEffect, useContext } from "react";
+import { FaPlus, FaTrash } from "react-icons/fa";
 import { Card, CardContent, Button } from "../../components/ui";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
+import axios from "axios";
+import { AuthContext } from "../../components/Context/AuthContext";
 
 const ExpenseTracking = () => {
-  const [expenses, setExpenses] = useState([
-    { id: 1, category: "Food", amount: 15000 },
-    { id: 2, category: "Transport", amount: 10000 },
-    { id: 3, category: "Shopping", amount: 20000 },
-  ]);
+  const [expenses, setExpenses] = useState([]);
   const [newExpense, setNewExpense] = useState({ category: "", amount: "" });
 
   const categories = ["Food", "Transport", "Shopping", "Entertainment", "Bills", "Other"];
 
+      const { user } = useContext(AuthContext);
+
+  // Fetch expenses from backend on component mount
+  useEffect(() => {
+    axios.get("http://localhost:5000/api/expenses/get")
+      .then(response => {
+        setExpenses(response.data);
+        console.log(expenses)
+      })
+      .catch(error => console.error("Error fetching expenses", error));
+  }, []);
+
   const addExpense = () => {
     if (newExpense.category && newExpense.amount) {
-      setExpenses([...expenses, { id: Date.now(), ...newExpense, amount: parseFloat(newExpense.amount) }]);
-      setNewExpense({ category: "", amount: "" });
+
+      const body = {
+        ...newExpense,
+        userId: user._id,
+      }
+      // Send POST request to backend
+      axios.post("http://localhost:5000/api/expenses/create", body)
+        .then(response => {
+          setExpenses([...expenses, response.data]);
+          setNewExpense({ category: "", amount: "" });
+        })
+        .catch(error => console.error("Error adding expense", error));
     }
   };
 
-  const deleteExpense = (id) => {
-    setExpenses(expenses.filter((expense) => expense.id !== id));
+  
+ 
+  const deleteExpense = async (id) => {
+    try {
+      await axios.delete(`http://localhost:5000/api/expenses/delete/${id}`);
+        setExpenses(expenses.filter((expense) => expense.id !== id));
+      
+    } catch (error) {
+      console.error("Error deleting expenses:", error);
+    }
   };
-
   const totalExpenses = expenses.reduce((sum, exp) => sum + exp.amount, 0);
 
   const pieData = categories.map((cat) => ({
@@ -35,7 +62,6 @@ const ExpenseTracking = () => {
 
   return (
     <div className="bg-[#2E3A59] min-h-screen text-white p-6">
-      {/* Header */}
       <h2 className="text-2xl font-bold mb-4">Expense Tracking</h2>
 
       {/* Add Expense Section */}
@@ -70,12 +96,16 @@ const ExpenseTracking = () => {
         <CardContent>
           <h3 className="text-lg font-semibold">Expense List</h3>
           <ul className="mt-4">
-            {expenses.map((exp) => (
+            {expenses.map((exp) => {
+                //console.log(JSON.stringify(exp))
+              return (
               <li key={exp.id} className="flex justify-between items-center bg-gray-700 p-2 rounded mt-2">
                 <span>{exp.category} - Tsh {exp.amount}</span>
-                <Button className="bg-red-500" onClick={() => deleteExpense(exp.id)}><FaTrash /></Button>
+                <Button className="bg-red-500" onClick={() => {
+                  deleteExpense(exp._id)
+                }}><FaTrash /></Button>
               </li>
-            ))}
+            )})}
           </ul>
         </CardContent>
       </Card>
@@ -96,22 +126,23 @@ const ExpenseTracking = () => {
             </ResponsiveContainer>
           </CardContent>
         </Card>
-        
+
+       
         {/* Pie Chart */}
         <Card>
-          <CardContent>
-            <h3 className="text-lg font-semibold">Expense Breakdown</h3>
-            <ResponsiveContainer width="100%" height={250}>
-              <PieChart>
-                <Pie data={pieData} dataKey="value" cx="50%" cy="50%" outerRadius={80}>
-                  {pieData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-              </PieChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
+           <CardContent>
+             <h3 className="text-lg font-semibold">Expense Breakdown</h3>
+             <ResponsiveContainer width="100%" height={250}>
+               <PieChart>
+                 <Pie data={pieData} dataKey="value" cx="50%" cy="50%" outerRadius={80}>
+                   {pieData.map((entry, index) => (
+                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                   ))}
+                 </Pie>
+               </PieChart>
+             </ResponsiveContainer>
+           </CardContent>
+         </Card>
       </div>
     </div>
   );

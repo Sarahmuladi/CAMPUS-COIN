@@ -9,7 +9,7 @@ export default function Features() {
 const navigate = useNavigate();
 
 const handleGetStarted = () => {
-    navigate('/signIn')
+    navigate('/signUp')
 }
 
   return (

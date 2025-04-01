@@ -7,7 +7,7 @@ export default function AboutUs() {
 const navigate = useNavigate();
 
 const handleGetStarted = () => {
-  navigate('/signIn')
+  navigate('/signUp')
 }
 
   return (

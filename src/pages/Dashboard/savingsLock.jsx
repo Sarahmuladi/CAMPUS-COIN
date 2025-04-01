@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { FaLock, FaMoneyBillWave, FaClock, FaCheckCircle } from "react-icons/fa";
 import { Button, Card, CardContent } from "../../components/ui";
 import { useNavigate } from "react-router-dom";
+import axios from 'axios'; 
 
 const SavingsLock = () => {
   const [lockAmount, setLockAmount] = useState();
@@ -10,13 +11,13 @@ const SavingsLock = () => {
   const [goalReached, setGoalReached] = useState(false);
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
-  const [lockDuration, setLockDuration] = useState(1); // Default is 1
-  const [lockUnit, setLockUnit] = useState("weeks"); // Default is weeks
+  const [lockDuration, setLockDuration] = useState(1); 
+  const [lockUnit, setLockUnit] = useState("weeks"); 
   const [startDate, setStartDate] = useState(null);
 
   const navigate = useNavigate();
 
-  const handleLockSavings = () => {
+  const handleLockSavings = async () => {
     if (lockAmount > 0 && lockDuration > 0) {
       const durationInMilliseconds = lockUnit === "weeks" 
         ? lockDuration * 7 * 24 * 60 * 60 * 1000 // Convert weeks to milliseconds
@@ -28,16 +29,47 @@ const SavingsLock = () => {
       setEndTime(calculatedEndTime);
       setStartDate(new Date().toLocaleString());
       startCountdown(durationInMilliseconds);
+
+      // Save the lock data to the backend 
+      try {
+
+        const lockUntil = new Date(calculatedEndTime).toLocaleString();
+        const body = {
+          amount: lockAmount,
+          lockDuration,
+          lockUnit,
+          startTime: Date.now(),
+          lockUntil,
+          
+        };
+
+
+         const response = await axios.post('http://localhost:5000/api/lockedSavings/create', body);
+
+         if (response.status === 200) {
+           console.log('Savings lock data saved successfully!');
+         } else {
+           console.error('Failed to save savings lock data');
+         }
+      } catch (error) {
+        console.error('Error saving savings lock data:', error);
+      }
     }
   };
 
   const startCountdown = (duration) => {
     const interval = setInterval(() => {
-      const remainingTime = Math.max(0, endTime - Date.now());
+      const remainingTime = Math.max(0, Date.now() - endTime );
+      console.log(remainingTime);
       setTimer(remainingTime);
       if (remainingTime === 0) {
         clearInterval(interval);
         setGoalReached(true);
+
+        // Update backend about completion 
+        axios.post('http://localhost:5000/api/lockedSavings/complete', { lockedUntil: Date.now() })
+          .then(response => console.log('Savings lock completed in backend'))
+          .catch(error => console.error('Error updating backend completion:', error));
       }
     }, 1000);
   };
@@ -170,3 +202,4 @@ const SavingsLock = () => {
 };
 
 export default SavingsLock;
+

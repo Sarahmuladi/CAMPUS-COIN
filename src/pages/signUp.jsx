@@ -9,25 +9,28 @@ export default function SignUp() {
   const [fullName, setFullName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [error, setError] = useState(null)
 
-  const { signup, error, isLoading } = useSignUp()
+  const { isLoading } = useSignUp()
 
   const {signup: userRegister} = useContext(AuthContext);
 
   
 
-  const  handleSignUp = (e) => {
+  const handleSignUp = async (e) => {
     e.preventDefault();
+    setError(null);
     try {
-
-      const user = userRegister( fullName, email, password)
+      const user = await userRegister(fullName, email, password);
       console.log(user);
       
     } catch (error) {
-      console.error("Login failed:", error);
-      setError("Network error, please try again.");
+      console.error("Register failed:", error);
+      setError(error.Message); 
+      console.log(error.Message);
     }
   };
+  
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-[#2E3A59]">

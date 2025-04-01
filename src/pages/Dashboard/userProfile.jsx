@@ -1,51 +1,91 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { FaUserEdit, FaLock, FaSave, FaTimes, FaCamera } from "react-icons/fa";
 import { Card, CardContent, Button, Input, Label, Switch } from "../../components/ui";
+import { AuthContext } from "../../components/Context/AuthContext";
+import axios from "axios";
 
 const UserProfile = () => {
-  const [user, setUser] = useState({
-    name: "Sarah Doe",
-    email: "sarah@example.com",
-    phone: "255-123-456-789",
+  const { user } = useContext(AuthContext);
+  const [userData, setUserData] = useState({
+    name: "",
+    email: "",
+    phone: "",
     darkMode: false,
+    profilePic: "",
   });
   const [password, setPassword] = useState("");
-  const [profilePic, setProfilePic] = useState(null);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState();
+  const [profilePicFile, setProfilePicFile] = useState(null);
 
+  // Fetch user data from backend
+  useEffect(() => {
+    axios
+      .get(`http://localhost:5000/api/user/${user.id}`)
+      .then((response) => {
+        setUserData(response.data);
+      })
+      .catch((error) => console.error("Error fetching user data:", error));
+  }, [user.id]);
+
+  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setUser({ ...user, [name]: value });
+    setUserData({ ...userData, [name]: value });
   };
 
-  const handlePasswordChange = (e) => setPassword(e.target.value);
-
+  // Handle profile picture selection
   const handleProfilePicChange = (e) => {
     const file = e.target.files[0];
+    setProfilePicFile(file);
+
+    // Preview image
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => setProfilePic(reader.result);
+      reader.onloadend = () => setUserData({ ...userData, profilePic: reader.result });
       reader.readAsDataURL(file);
     }
   };
 
-  const handleSave = () => {
-    alert("Profile updated successfully!");
+  // Save updated user info to backend
+  const handleSave = async () => {
+    try {
+      let profilePicUrl = userData.profilePic;
+
+      // Upload profile picture if a new file is selected
+      if (profilePicFile) {
+        const formData = new FormData();
+        formData.append("profilePic", profilePicFile);
+        const uploadResponse = await axios.post("http://localhost:5000/api/upload", formData);
+        profilePicUrl = uploadResponse.data.imageUrl;
+      }
+
+      // Update user details
+      await axios.put(`http://localhost:5000/api/user/${user.id}`, {
+        ...userData,
+        profilePic: profilePicUrl,
+        password: password || undefined, // Only send password if changed
+      });
+
+      alert("Profile updated successfully!");
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    }
   };
 
   return (
     <div className="bg-[#2E3A59] min-h-screen text-white p-6 flex justify-center">
       <Card className="w-full max-w-lg p-6 bg-gray-900 rounded-2xl shadow-lg">
         <CardContent>
-          {/* Profile Section (Current Info) */}
+          {/* Profile Section */}
           <div className="text-2xl font-semibold mb-4">Profile Information</div>
-          <div className="flex  items-center mb-6">
-            
+          <div className="flex items-center mb-6">
             <div className="flex justify-center mb-6">
-
               <label htmlFor="profile-pic" className="relative cursor-pointer">
                 <FaCamera className="absolute bottom-2 right-2 bg-gray-800 p-2 rounded-full text-white text-xl" />
                 <img
-                  src={profilePic || "https://via.placeholder.com/120"}
+                  src={userData.profilePic || "https://via.placeholder.com/120"}
                   alt="Profile"
                   className="w-28 h-28 rounded-full object-cover border-4 border-gray-700"
                 />
@@ -53,38 +93,37 @@ const UserProfile = () => {
               <input type="file" id="profile-pic" accept="image/*" className="hidden" onChange={handleProfilePicChange} />
             </div>
 
-            <div className="p-6  text-left">
-              <div className="font-bold">{user.name}</div>
-              <div>{user.email}</div>
-              <div>{user.phone}</div>
+            <div className="p-6 text-left">
+              <div className="font-bold">{userData.name}</div>
+              <div>{userData.email}</div>
+              <div>{userData.phone}</div>
             </div>
           </div>
 
-          {/* Manage Personal Information Section (Editable) */}
+          {/* Edit User Info */}
           <div className="mt-6">
             <div className="text-xl font-semibold mb-4">Manage Your Personal Information</div>
-
 
             <div className="space-y-4">
               <div>
                 <Label>Name</Label>
-                <Input name="name" value={user.name} onChange={handleChange} className="w-full" />
+                <Input name="name"  onChange={(e) => setName(e.target.value)} className="w-full" />
               </div>
               <div>
                 <Label>Email</Label>
-                <Input type="email" name="email" value={user.email} onChange={handleChange} className="w-full" />
+                <Input type="email" name="email"  onChange={(e) => setEmail(e.target.value)} className="w-full" />
               </div>
               <div>
                 <Label>Phone</Label>
-                <Input type="tel" name="phone" value={user.phone} onChange={handleChange} className="w-full" />
+                <Input type="tel" name="phone"  onChange={(e) => setPhone(e.target.value)} className="w-full" />
               </div>
               <div>
                 <Label>Change Password</Label>
-                <Input type="password" value={password} onChange={handlePasswordChange} className="w-full" />
+                <Input type="password" onChange={(e) => setPassword(e.target.value)} className="w-full" />
               </div>
               <div className="flex items-center justify-between">
                 <Label>Dark Mode</Label>
-                <Switch checked={user.darkMode} onCheckedChange={(checked) => setUser({ ...user, darkMode: checked })} />
+                <Switch checked={userData.darkMode} onCheckedChange={(checked) => setUserData({ ...userData, darkMode: checked })} />
               </div>
             </div>
 
@@ -105,3 +144,4 @@ const UserProfile = () => {
 };
 
 export default UserProfile;
+

@@ -2,7 +2,7 @@ import { useAuthContext } from "./useAuthContext";
 
 export const useSignOut = () => {
 
-    const {dispatch} = useAuthContext();
+    //const {dispatch} = useAuthContext();
 
     const signout = () => {
         //remove user from storage
@@ -11,7 +11,7 @@ export const useSignOut = () => {
         //localStorage.removeItem('token');
 
         //dispatch logout action
-        dispatch({type: 'LOG OUT'})
+        //dispatch({type: 'LOG OUT'})
         
     }
  

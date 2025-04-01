@@ -1,4 +1,3 @@
-// filepath: c:\Users\HP\campus-coin\src\components\ui\CardContent.jsx
 import React from 'react';
 
 const CardContent = ({ children, className }) => {
