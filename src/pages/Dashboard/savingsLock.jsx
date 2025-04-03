@@ -60,7 +60,7 @@ const SavingsLock = () => {
   const startCountdown = (duration) => {
     const interval = setInterval(() => {
       const remainingTime = Math.max(0, Date.now() - endTime );
-      console.log(remainingTime);
+      //console.log(remainingTime);
       setTimer(remainingTime);
       if (remainingTime === 0) {
         clearInterval(interval);
@@ -97,7 +97,7 @@ const SavingsLock = () => {
         </div>
         <ul className="space-y-4">
           <li><Button onClick={() => navigate("/dashboard")} className="text-white flex items-center gap-2"><FaMoneyBillWave /> Dashboard</Button></li>
-          <li><Button onClick={() => navigate("/savings-lock")} className="text-white flex items-center gap-2"><FaLock /> Savings Lock</Button></li>
+          <li><Button onClick={() => navigate("/savingsLock")} className="text-white flex items-center gap-2"><FaLock /> Savings Lock</Button></li>
           <li><Button onClick={() => navigate("/settings")} className="text-white flex items-center gap-2"><FaClock /> Settings</Button></li>
         </ul>
       </nav>

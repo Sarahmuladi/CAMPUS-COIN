@@ -135,7 +135,8 @@ const Home = () => {
      style={{ backgroundImage: "url('/Images/img1.jpg')" }}>
   
   {/* Overlay for better text contrast */}
-  <div className="absolute inset-0  bg-opacity-70"></div> 
+  <div className="absolute inset-0 bg-black opacity-50"></div>
+ 
 
   
 
@@ -154,14 +155,14 @@ const Home = () => {
     {/* Buttons */}
     <div className="mt-6 flex gap-4">
       <button 
-      className="px-6 py-3 bg-cream text-gray-900 font-semibold rounded-lg shadow-md hover:bg-red-500 transition-all"
+      className="px-6 py-3 bg-cream text-gray-300 font-semibold rounded-lg shadow-md hover:bg-red-500 transition-all"
       onClick={handleGetStarted}
       >
       Get Started
       </button>
 
       <button 
-      className="px-6 py-3 bg-transparent border border-cream text-cream font-semibold rounded-lg hover:bg-cream hover:text-gray-900 transition"
+      className="px-6 py-3 bg-transparent border border-cream text-cream font-semibold rounded-lg hover:bg-cream hover:text-gray-300 transition"
       onClick={handleLearnMore}
       >
       Learn More

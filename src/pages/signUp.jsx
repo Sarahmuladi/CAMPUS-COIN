@@ -15,27 +15,27 @@ export default function SignUp() {
 
   const {signup: userRegister} = useContext(AuthContext);
 
-  
-
   const handleSignUp = async (e) => {
     e.preventDefault();
     setError(null);
+    
     try {
       const user = await userRegister(fullName, email, password);
       console.log(user);
       
     } catch (error) {
       console.error("Register failed:", error);
-      setError(error.Message); 
-      console.log(error.Message);
+      
+      const errorMessage = error.response?.data?.message || error.message || "Registration failed. Please try again.";
+      setError(errorMessage);
     }
   };
   
-
   return (
     <div className="flex items-center justify-center min-h-screen bg-[#2E3A59]">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         <h2 className="text-2xl font-bold text-center text-[#FF6F61]">Sign Up</h2>
+       
         <form onSubmit={handleSignUp} className="mt-6">
           <div>
             <label className="block font-medium">Full Name</label>
@@ -56,7 +56,7 @@ export default function SignUp() {
           disabled={isLoading}
           type="submit" 
           className="w-full mt-6 bg-[#FF6F61] text-white py-2 rounded-md font-bold hover:bg-red-500">
-            Sign Up
+            {isLoading ? 'Signing up...' : 'Sign Up'}
           </button>
           {error && <div className='text-red-600'>{error}</div>}
         </form>

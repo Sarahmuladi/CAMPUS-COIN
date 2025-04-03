@@ -16,32 +16,69 @@ const Dashboard = () => {
   const [notifications, setNotifications] = useState([]);
   const navigate = useNavigate();
   const { signout } = useSignOut();
-  const { user } = useContext(AuthContext);
+  const { user, accessToken } = useContext(AuthContext);
 
-  useEffect(() => {
-    // Fetch the token from localStorage or context
-    const token = localStorage.getItem("token");  
+  // useEffect(() => {
+  //   // Fetch the token from localStorage or context
+  //   const accessToken = localStorage.getItem("accessToken");  
 
-    // Make API call with Authorization header
-    axios.get("http://localhost:5000/api/dashboard/get", {
-      headers: {
-        Authorization: token ? `Bearer ${token}` : ""
+  //   // Make API call with Authorization header
+  //   axios.get("http://localhost:5000/api/dashboard/get", {
+  //     headers: {
+  //       Authorization: `Bearer ${accessToken}`,
+  //     }
+  //   })
+  //   .then(response => {
+  //     setBalance(response.data.balance);
+  //     setSavingsGoal(response.data.savingsGoal);
+  //     setTransactions(response.data.transactions);
+  //     setNotifications(response.data.notifications);
+  //   })
+  //   .catch(error => {
+  //     console.error("Error fetching dashboard data:", error);
+  //     if (error.response && error.response.status === 401) {
+  //       // Handle unauthorized access
+  //       //navigate("/signIn");
+  //     }
+  //   });
+  // }, [navigate]);
+
+ 
+useEffect(() => {
+  const fetchDashboardData = async () => {
+    try {
+      
+      const token = accessToken || localStorage.getItem("accessToken");
+      
+      if (!token) {
+        console.log("No access token available");
+        return;
       }
-    })
-    .then(response => {
+      
+      const response = await axios.get("http://localhost:5000/api/dashboard/get", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      });
+      
       setBalance(response.data.balance);
       setSavingsGoal(response.data.savingsGoal);
       setTransactions(response.data.transactions);
       setNotifications(response.data.notifications);
-    })
-    .catch(error => {
+    } catch (error) {
       console.error("Error fetching dashboard data:", error);
       if (error.response && error.response.status === 401) {
         // Handle unauthorized access
-        //navigate("/signIn");
+        // signout(); 
       }
-    });
-  }, [navigate]);
+    }
+  };
+
+  // Only fetch if we have a user
+  if (user) {
+    fetchDashboardData();
+  }
+}, [user, accessToken, navigate]); 
 
   const data = [
     { name: "Saved", value: balance },
