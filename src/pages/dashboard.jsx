@@ -107,7 +107,7 @@ useEffect(() => {
   return (
     <div className="bg-[#2E3A59] min-h-screen text-white p-6">
       {/* Side Navigation */}
-      <nav className="w-64 bg-[#1F2A3A] fixed inset-0 top-0 left-0 h-full py-6">
+      <nav className="w-20 md:w-64 bg-[#1F2A3A] absolute md:fixed inset-y-0 left-0 h-full py-6 transition-all">
         <div className="text-center mb-8">
           <h2 className="text-2xl font-semibold text-white">
             <span className="text-blue-800">Campus</span>
@@ -129,7 +129,7 @@ useEffect(() => {
       </nav>
 
       {/* Main Content */}
-      <div className="ml-60 mr-40 p-6">
+      <div className="md:ml-64 ml-20 md:mr-10 mr-2 p-6">
         {/* Welcome Section */}
         <section className="text-center my-6">
           {user && <h2 className="text-xl font-semibold">Welcome, {user?.fullName || "Guest"}!</h2>}
