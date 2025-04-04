@@ -10,7 +10,7 @@ export const useSignUp = () => {
         setIsLoading(true)
         setError(null)
 
-        const response = await fetch('http://localhost:5000/api/users/signUp', {
+        const response = await fetch('https://campus-coin-backend.onrender.com/api/users/signUp', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({ fullName, email, password })

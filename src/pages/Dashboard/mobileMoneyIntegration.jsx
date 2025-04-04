@@ -9,7 +9,7 @@ const MobileMoney = () => {
 
   useEffect(() => {
     // Fetch transaction history
-    axios.get('http://localhost:5000/api/transactions/get')
+    axios.get('https://campus-coin-backend.onrender.com/api/transactions/get')
       .then(response => setTransactions(response.data))
       .catch(error => console.error('Error fetching transactions:', error));
   }, []);
@@ -21,7 +21,7 @@ const MobileMoney = () => {
     if (!amount || !phone) return alert("Transaction cancelled!");
 
     try {
-      const response = await axios.post(`http://localhost:5000/api/${type.toLowerCase()}`, {
+      const response = await axios.post(`https://campus-coin-backend.onrender.com/api/${type.toLowerCase()}`, {
         service,
         amount,
         phone,

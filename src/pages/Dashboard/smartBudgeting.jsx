@@ -17,7 +17,7 @@ const SmartBudgeting = () => {
   // Fetch data on component mount
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/savings/get")
+      .get("https://campus-coin-backend.onrender.com/api/savings/get")
       .then((response) => {
         const data = response.data[0] || {}; 
         setIncome(data.income || "");
@@ -53,7 +53,7 @@ const SmartBudgeting = () => {
     };
 
     axios
-      .post("http://localhost:5000/api/savings/add", budget)
+      .post("https://campus-coin-backend.onrender.com/api/savings/add", budget)
       .then((response) => {
         console.log("Budget saved successfully", response.data);
       })

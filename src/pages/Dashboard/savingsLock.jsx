@@ -44,7 +44,7 @@ const SavingsLock = () => {
         };
 
 
-         const response = await axios.post('http://localhost:5000/api/lockedSavings/create', body);
+         const response = await axios.post('https://campus-coin-backend.onrender.com/api/lockedSavings/create', body);
 
          if (response.status === 200) {
            console.log('Savings lock data saved successfully!');
@@ -67,7 +67,7 @@ const SavingsLock = () => {
         setGoalReached(true);
 
         // Update backend about completion 
-        axios.post('http://localhost:5000/api/lockedSavings/complete', { lockedUntil: Date.now() })
+        axios.post('https://campus-coin-backend.onrender.com/api/lockedSavings/complete', { lockedUntil: Date.now() })
           .then(response => console.log('Savings lock completed in backend'))
           .catch(error => console.error('Error updating backend completion:', error));
       }

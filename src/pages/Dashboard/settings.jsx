@@ -22,7 +22,7 @@ const Settings = () => {
 
   // Fetch user settings from backend
   useEffect(() => {
-    axios.get(`http://localhost:5000/api/settings/${user.id}`)
+    axios.get(`https://campus-coin-backend.onrender.com/api/settings/${user.id}`)
       .then(response => setSettings(response.data))
       .catch(error => console.error("Error fetching settings:", error));
   }, [user._id]);
@@ -41,7 +41,7 @@ const Settings = () => {
   // Save updated settings to backend
   const handleSave = async () => {
     try {
-      await axios.put(`http://localhost:5000/api/settings/${user.id}`, settings);
+      await axios.put(`https://campus-coin-backend.onrender.com/api/settings/${user.id}`, settings);
       alert("Settings updated successfully!");
     } catch (error) {
       console.error("Error updating settings:", error);
@@ -52,7 +52,7 @@ const Settings = () => {
   const handleDeleteAccount = async () => {
     if (window.confirm("Are you sure you want to delete your account? This action is irreversible.")) {
       try {
-        await axios.delete(`http://localhost:5000/api/user/${user.id}`);
+        await axios.delete(`https://campus-coin-backend.onrender.com/api/user/${user.id}`);
         alert("Account deleted successfully.");
       } catch (error) {
         console.error("Error deleting account:", error);

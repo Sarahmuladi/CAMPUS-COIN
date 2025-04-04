@@ -31,7 +31,7 @@ const UserProfile = () => {
     const fetchUserData = async () => {
       try {
         setIsLoading(true);
-        const response = await axios.get(`http://localhost:5000/api/user/${user._id}`);
+        const response = await axios.get(`https://campus-coin-backend.onrender.com/api/user/${user._id}`);
         const data = response.data;
         
         setUserData(data);
@@ -79,7 +79,7 @@ const UserProfile = () => {
       if (profilePicFile) {
         const formData = new FormData();
         formData.append("profilePic", profilePicFile);
-        const uploadResponse = await axios.post("http://localhost:5000/api/upload", formData);
+        const uploadResponse = await axios.post("https://campus-coin-backend.onrender.com/api/upload", formData);
         profilePicUrl = uploadResponse.data.imageUrl;
       }
 
@@ -98,7 +98,7 @@ const UserProfile = () => {
       }
 
       // Update user details
-      await axios.put(`http://localhost:5000/api/user/${user._id}`, updatedUserData);
+      await axios.put(`https://campus-coin-backend.onrender.com/api/user/${user._id}`, updatedUserData);
       
       // Update local state
       setUserData({...userData, ...updatedUserData});

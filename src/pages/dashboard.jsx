@@ -23,7 +23,7 @@ const Dashboard = () => {
   //   const accessToken = localStorage.getItem("accessToken");  
 
   //   // Make API call with Authorization header
-  //   axios.get("http://localhost:5000/api/dashboard/get", {
+  //   axios.get("https://campus-coin-backend.onrender.com/api/dashboard/get", {
   //     headers: {
   //       Authorization: `Bearer ${accessToken}`,
   //     }
@@ -60,7 +60,7 @@ useEffect(() => {
         return;
       }
       
-      const response = await axios.get("http://localhost:5000/api/dashboard/get", {
+      const response = await axios.get("https://campus-coin-backend.onrender.com/api/dashboard/get", {
         headers: {
           Authorization: `Bearer ${token}`,
         }

@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }) => {
         if (!storedRefreshToken) return signout();
 
         try {
-            const res = await axios.post("http://localhost:5000/api/auth/refresh", {
+            const res = await axios.post("https://campus-coin-backend.onrender.com/api/auth/refresh", {
                 refreshToken: storedRefreshToken,
             });
 
@@ -76,7 +76,7 @@ export const AuthProvider = ({ children }) => {
     const signup = async (fullName, email, password) => {
         try {
             setError(null);
-            const response = await axios.post("http://localhost:5000/api/auth/signUp", { fullName, email, password });
+            const response = await axios.post("https://campus-coin-backend.onrender.com/api/auth/signUp", { fullName, email, password });
             navigate('/dashboard');
             return response.data;
         } catch (error) {
@@ -91,7 +91,7 @@ export const AuthProvider = ({ children }) => {
     const signin = async (email, password) => {
         try {
             setError(null);
-            const res = await axios.post("http://localhost:5000/api/auth/signIn", { email, password }, {
+            const res = await axios.post("https://campus-coin-backend.onrender.com/api/auth/signIn", { email, password }, {
                 headers: { "Content-Type": "application/json" },
             });
     

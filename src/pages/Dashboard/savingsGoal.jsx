@@ -19,7 +19,7 @@ const SavingsGoal = () => {
   useEffect(() => {
     const fetchGoals = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/savingsGoal/get");
+        const response = await axios.get("https://campus-coin-backend.onrender.com/api/savingsGoal/get");
         setGoals(response.data); 
       } catch (error) {
         console.error("Error fetching goals:", error);
@@ -41,7 +41,7 @@ const SavingsGoal = () => {
       };
  
       try {
-        const response = await axios.post("http://localhost:5000/api/savingsGoal/create", {newGoal}, {
+        const response = await axios.post("https://campus-coin-backend.onrender.com/api/savingsGoal/create", {newGoal}, {
           headers: { "Content-Type": "application/json" }
         });
  
@@ -62,7 +62,7 @@ const SavingsGoal = () => {
   // Delete goal from backend
   const handleDeleteGoal = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/savingsGoal/delete/${id}`);
+      await axios.delete(`https://campus-coin-backend.onrender.com/api/savingsGoal/delete/${id}`);
       setGoals(goals.filter((goal) => goal._id !== id));
     } catch (error) {
       console.error("Error deleting goal:", error);

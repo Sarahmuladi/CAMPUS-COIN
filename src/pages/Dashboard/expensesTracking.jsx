@@ -15,7 +15,7 @@ const ExpenseTracking = () => {
 
   // Fetch expenses from backend on component mount
   useEffect(() => {
-    axios.get("http://localhost:5000/api/expenses/get")
+    axios.get("https://campus-coin-backend.onrender.com/api/expenses/get")
       .then(response => {
         setExpenses(response.data);
         console.log(expenses)
@@ -31,7 +31,7 @@ const ExpenseTracking = () => {
         userId: user._id,
       }
       // Send POST request to backend
-      axios.post("http://localhost:5000/api/expenses/create", body)
+      axios.post("https://campus-coin-backend.onrender.com/api/expenses/create", body)
         .then(response => {
           setExpenses([...expenses, response.data]);
           setNewExpense({ category: "", amount: "" });
@@ -44,7 +44,7 @@ const ExpenseTracking = () => {
  
   const deleteExpense = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/expenses/delete/${id}`);
+      await axios.delete(`https://campus-coin-backend.onrender.com/api/expenses/delete/${id}`);
         setExpenses(expenses.filter((expense) => expense._id !== id));
       
     } catch (error) {
