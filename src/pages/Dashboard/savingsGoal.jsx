@@ -5,8 +5,6 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../../components/Context/AuthContext";
 
-
-
 const SavingsGoal = () => {
   const [goalName, setGoalName] = useState("");
   const [goalAmount, setGoalAmount] = useState();
@@ -15,7 +13,7 @@ const SavingsGoal = () => {
   const [goals, setGoals] = useState([]);
   const navigate = useNavigate();
 
-    const { user } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
 
   // Fetch goals from backend on mount
   useEffect(() => {
@@ -30,7 +28,7 @@ const SavingsGoal = () => {
 
     fetchGoals();
   }, []);
-
+  
   // Add goal to backend
   const handleAddGoal = async () => {
     if (goalName && goalAmount > 0 && currentAmount >= 0 && goalDeadline) {
@@ -41,23 +39,26 @@ const SavingsGoal = () => {
         currentAmount: Number(currentAmount), 
         goalDeadline: new Date(goalDeadline).toISOString() 
       };
-  
+ 
       try {
         const response = await axios.post("http://localhost:5000/api/savingsGoal/create", {newGoal}, {
           headers: { "Content-Type": "application/json" }
         });
-  
+ 
         console.log("New goal added:", response.data); 
-  
-        setGoals((prevGoals) => [...prevGoals, response.data]); 
+
+        // Update to properly handle the response structure
+        // Make sure we're adding the new goal to the existing goals array
+        const addedGoal = response.data;
+        setGoals(prevGoals => [...prevGoals, addedGoal]);
+        
         resetForm();
       } catch (error) {
         console.error("Error adding goal:", error);
       }
     }
   };
-  
-
+ 
   // Delete goal from backend
   const handleDeleteGoal = async (id) => {
     try {
@@ -71,16 +72,16 @@ const SavingsGoal = () => {
   // Reset form inputs
   const resetForm = () => {
     setGoalName("");
-    setGoalAmount( );
-    setCurrentAmount( );
+    setGoalAmount("");
+    setCurrentAmount("");
     setGoalDeadline("");
   };
-
+  
   // Calculate progress percentage
   const calculateProgress = (goalAmount, currentAmount) => {
     return (currentAmount / goalAmount) * 100;
   };
-
+  
   return (
     <div className="bg-[#2E3A59] min-h-screen text-white p-6">
       {/* Side Navigation */}
@@ -106,14 +107,12 @@ const SavingsGoal = () => {
           </li>
         </ul>
       </nav>
-
       {/* Main Content */}
       <div className="ml-64 p-6">
         <section className="text-center my-6">
           <h2 className="text-2xl font-semibold">Set Your Savings Goals</h2>
           <p className="text-lg mt-2">Track your progress and achieve your financial dreams.</p>
         </section>
-
         {/* Add New Goal */}
         <section className="mt-6 flex justify-center">
           <Card className="w-full max-w-lg">
@@ -158,7 +157,6 @@ const SavingsGoal = () => {
             </CardContent>
           </Card>
         </section>
-
         {/* Display Goals */}
         <section className="mt-8">
           <h3 className="text-xl font-semibold text-center">Your Goals</h3>
@@ -169,7 +167,7 @@ const SavingsGoal = () => {
               goals.map((goal) => (
                 <Card key={goal._id} className="p-4 flex justify-between items-center bg-[#1F2A3A]">
                   <div className="flex flex-col">
-                    <h4 className="text-lg font-semibold">{goal.name}</h4>
+                    <h4 className="text-lg font-semibold">{goal.name || goal.goalName}</h4>
                     <p className="text-sm text-gray-300">Target: Tsh {goal.goalAmount}</p>
                     <p className="text-sm text-gray-300">Current: Tsh {goal.currentAmount}</p>
                     <p className="text-sm text-gray-300">
@@ -208,4 +206,3 @@ const SavingsGoal = () => {
 };
 
 export default SavingsGoal;
-

@@ -21,6 +21,7 @@ import { AuthProvider } from './components/Context/AuthContext'
 import { ProtectedRoute } from './pages/protectedRoutes'
 
 
+
 const App = () => {
 
   const {user} = useAuthContext();
@@ -46,7 +47,7 @@ const App = () => {
       <Route path="/mobileMoneyIntegration" element={<MobileMoney />} />
       <Route path="/settings" element={<Settings />} />
     </Routes>
-     </AuthProvider> 
+     </AuthProvider>
     // </BrowserRouter>
     
   )

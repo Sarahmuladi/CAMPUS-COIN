@@ -45,7 +45,7 @@ const ExpenseTracking = () => {
   const deleteExpense = async (id) => {
     try {
       await axios.delete(`http://localhost:5000/api/expenses/delete/${id}`);
-        setExpenses(expenses.filter((expense) => expense.id !== id));
+        setExpenses(expenses.filter((expense) => expense._id !== id));
       
     } catch (error) {
       console.error("Error deleting expenses:", error);
@@ -99,8 +99,8 @@ const ExpenseTracking = () => {
             {expenses.map((exp) => {
                 //console.log(JSON.stringify(exp))
               return (
-              <li key={exp.id} className="flex justify-between items-center bg-gray-700 p-2 rounded mt-2">
-                <span>{exp.category} - Tsh {exp.amount}</span>
+              <li key={exp._id} className="flex justify-between items-center bg-gray-700 p-2 rounded mt-2">
+                <span className="text-gray-200">{exp.category} - Tsh {exp.amount}</span>
                 <Button className="bg-red-500" onClick={() => {
                   deleteExpense(exp._id)
                 }}><FaTrash /></Button>

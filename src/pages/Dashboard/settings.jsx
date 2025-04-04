@@ -25,7 +25,7 @@ const Settings = () => {
     axios.get(`http://localhost:5000/api/settings/${user.id}`)
       .then(response => setSettings(response.data))
       .catch(error => console.error("Error fetching settings:", error));
-  }, [user.id]);
+  }, [user._id]);
 
   // Handle input changes
   const handleChange = (e) => {

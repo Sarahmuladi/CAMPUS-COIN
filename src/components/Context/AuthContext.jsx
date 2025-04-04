@@ -18,6 +18,9 @@ export const AuthProvider = ({ children }) => {
             const storedAccessToken = localStorage.getItem("accessToken");
             const storedRefreshToken = localStorage.getItem("refreshToken");
 
+            console.log("Stored Access Token:", storedAccessToken);
+            console.log("Stored Refresh Token:", storedRefreshToken);
+
             if (storedAccessToken) {
                 try {
                     const decoded = jwtDecode(storedAccessToken);

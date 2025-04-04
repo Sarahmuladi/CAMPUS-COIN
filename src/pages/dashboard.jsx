@@ -43,6 +43,11 @@ const Dashboard = () => {
   //   });
   // }, [navigate]);
 
+  useEffect(() => {
+    console.log("User in Dashboard:", user);
+  }, [user])
+  
+
  
 useEffect(() => {
   const fetchDashboardData = async () => {
@@ -60,6 +65,9 @@ useEffect(() => {
           Authorization: `Bearer ${token}`,
         }
       });
+
+      // Check if the response is valid
+      console.log("Dashboard data response:", response);
       
       setBalance(response.data.balance);
       setSavingsGoal(response.data.savingsGoal);
@@ -124,7 +132,7 @@ useEffect(() => {
       <div className="ml-60 mr-40 p-6">
         {/* Welcome Section */}
         <section className="text-center my-6">
-          {user && <h2 className="text-xl font-semibold">Welcome, {user?.name || "Guest"}!</h2>}
+          {user && <h2 className="text-xl font-semibold">Welcome, {user?.fullName || "Guest"}!</h2>}
         </section>
 
         {/* Current Balance & Savings Progress */}

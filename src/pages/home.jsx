@@ -135,7 +135,7 @@ const Home = () => {
      style={{ backgroundImage: "url('/Images/img1.jpg')" }}>
   
   {/* Overlay for better text contrast */}
-  <div className="absolute inset-0 bg-black opacity-50"></div>
+  <div className="absolute inset-0 bg-blue-950 opacity-50"></div>
  
 
   
