@@ -4,7 +4,7 @@ import { FaMobileAlt, FaMoneyBillWave, FaHistory } from 'react-icons/fa';
 import axios from 'axios';
 
 const MobileMoney = () => {
-  const services = ['M-Pesa', 'Airtel Money', 'HaloPesa', 'Tigo Pesa'];
+  const services = ['M-Pesa', 'Airtel Money', 'HaloPesa', 'Mixx By Yas'];
   const [transactions, setTransactions] = useState([]);
 
   useEffect(() => {

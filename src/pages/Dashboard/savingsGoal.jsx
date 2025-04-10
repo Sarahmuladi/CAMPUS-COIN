@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { FaDollarSign, FaCalendarAlt, FaCheckCircle, FaTrashAlt, FaClock } from "react-icons/fa";
+import { FaDollarSign, FaCalendarAlt, FaCheckCircle, FaTrashAlt, FaClock, FaTachometerAlt, FaLock, FaCog, FaBars, FaTimes } from "react-icons/fa";
 import { Button, Card, CardContent } from "../../components/ui";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -11,16 +11,15 @@ const SavingsGoal = () => {
   const [currentAmount, setCurrentAmount] = useState();
   const [goalDeadline, setGoalDeadline] = useState();
   const [goals, setGoals] = useState([]);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
-
   const { user } = useContext(AuthContext);
 
-  // Fetch goals from backend on mount
   useEffect(() => {
     const fetchGoals = async () => {
       try {
         const response = await axios.get("https://campus-coin-backend.onrender.com/api/savingsGoal/get");
-        setGoals(response.data); 
+        setGoals(response.data);
       } catch (error) {
         console.error("Error fetching goals:", error);
       }
@@ -28,38 +27,33 @@ const SavingsGoal = () => {
 
     fetchGoals();
   }, []);
-  
-  // Add goal to backend
+
   const handleAddGoal = async () => {
     if (goalName && goalAmount > 0 && currentAmount >= 0 && goalDeadline) {
-      const newGoal = { 
+      const newGoal = {
         userId: user._id,
-        goalName: goalName, 
-        goalAmount: Number(goalAmount), 
-        currentAmount: Number(currentAmount), 
-        goalDeadline: new Date(goalDeadline).toISOString() 
+        goalName: goalName,
+        goalAmount: Number(goalAmount),
+        currentAmount: Number(currentAmount),
+        goalDeadline: new Date(goalDeadline).toISOString()
       };
- 
-      try {
-        const response = await axios.post("https://campus-coin-backend.onrender.com/api/savingsGoal/create", {newGoal}, {
-          headers: { "Content-Type": "application/json" }
-        });
- 
-        console.log("New goal added:", response.data); 
 
-        // Update to properly handle the response structure
-        // Make sure we're adding the new goal to the existing goals array
+      try {
+        const response = await axios.post(
+          "https://campus-coin-backend.onrender.com/api/savingsGoal/create",
+          { newGoal },
+          { headers: { "Content-Type": "application/json" } }
+        );
+
         const addedGoal = response.data;
         setGoals(prevGoals => [...prevGoals, addedGoal]);
-        
         resetForm();
       } catch (error) {
         console.error("Error adding goal:", error);
       }
     }
   };
- 
-  // Delete goal from backend
+
   const handleDeleteGoal = async (id) => {
     try {
       await axios.delete(`https://campus-coin-backend.onrender.com/api/savingsGoal/delete/${id}`);
@@ -69,50 +63,62 @@ const SavingsGoal = () => {
     }
   };
 
-  // Reset form inputs
   const resetForm = () => {
     setGoalName("");
     setGoalAmount("");
     setCurrentAmount("");
     setGoalDeadline("");
   };
-  
-  // Calculate progress percentage
+
   const calculateProgress = (goalAmount, currentAmount) => {
     return (currentAmount / goalAmount) * 100;
   };
-  
+
   return (
-    <div className="bg-[#2E3A59] min-h-screen text-white p-6">
-      {/* Side Navigation */}
-      <nav className="w-64 bg-[#1F2A3A] fixed inset-0 top-0 left-0 h-full py-6">
+    <div className="bg-[#2E3A59] min-h-screen text-white flex flex-col lg:flex-row">
+      {/* Mobile Nav Toggle */}
+      <div className="lg:hidden p-4 flex justify-between items-center bg-[#1F2A3A]">
+        <h2 className="text-xl font-semibold">Savings Goal</h2>
+        <button onClick={() => setSidebarOpen(!sidebarOpen)} className="text-white text-2xl">
+          {sidebarOpen ? <FaTimes /> : <FaBars />}
+        </button>
+      </div>
+
+      {/* Sidebar */}
+      <nav
+        className={`${
+          sidebarOpen ? "block" : "hidden"
+        } lg:block w-full lg:w-64 bg-[#1F2A3A] h-full p-6 lg:fixed z-10 lg:z-auto`}
+      >
         <div className="text-center mb-8">
-          <h2 className="text-2xl font-semibold text-white">Savings Goal</h2>
+          <h2 className="text-2xl font-semibold">Menu</h2>
         </div>
         <ul className="space-y-4">
           <li>
-            <Button onClick={() => navigate("/dashboard")} className="text-white flex items-center gap-2">
-              <FaDollarSign /> Dashboard
+            <Button onClick={() => navigate("/dashboard")} className="text-white flex items-center gap-2 w-full">
+              <FaTachometerAlt /> Dashboard
             </Button>
           </li>
           <li>
-            <Button onClick={() => navigate("/savingsLock")} className="text-white flex items-center gap-2">
-              <FaCalendarAlt /> Savings Lock
+            <Button onClick={() => navigate("/savingsLock")} className="text-white flex items-center gap-2 w-full">
+              <FaLock /> Savings Lock
             </Button>
           </li>
           <li>
-            <Button onClick={() => navigate("/settings")} className="text-white flex items-center gap-2">
-              <FaClock /> Settings
+            <Button onClick={() => navigate("/settings")} className="text-white flex items-center gap-2 w-full">
+              <FaCog /> Settings
             </Button>
           </li>
         </ul>
       </nav>
+
       {/* Main Content */}
-      <div className="ml-64 p-6">
+      <div className="w-full lg:ml-64 p-6">
         <section className="text-center my-6">
           <h2 className="text-2xl font-semibold">Set Your Savings Goals</h2>
           <p className="text-lg mt-2">Track your progress and achieve your financial dreams.</p>
         </section>
+
         {/* Add New Goal */}
         <section className="mt-6 flex justify-center">
           <Card className="w-full max-w-lg">
@@ -157,6 +163,7 @@ const SavingsGoal = () => {
             </CardContent>
           </Card>
         </section>
+
         {/* Display Goals */}
         <section className="mt-8">
           <h3 className="text-xl font-semibold text-center">Your Goals</h3>

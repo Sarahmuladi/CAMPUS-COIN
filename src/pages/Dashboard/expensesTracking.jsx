@@ -66,30 +66,30 @@ const ExpenseTracking = () => {
 
       {/* Add Expense Section */}
       <Card className="mb-6">
-        <CardContent>
-          <h3 className="text-lg font-semibold">Add New Expense</h3>
-          <div className="flex gap-4 mt-4">
-            <select
-              className="p-2 text-black rounded"
-              value={newExpense.category}
-              onChange={(e) => setNewExpense({ ...newExpense, category: e.target.value })}
-            >
-              <option value="">Select Category</option>
-              {categories.map((cat) => (
-                <option key={cat} value={cat}>{cat}</option>
-              ))}
-            </select>
-            <input
-              type="number"
-              placeholder="Amount"
-              className="p-2 text-black rounded"
-              value={newExpense.amount}
-              onChange={(e) => setNewExpense({ ...newExpense, amount: e.target.value })}
-            />
-            <Button className="bg-green-500" onClick={addExpense}><FaPlus /></Button>
-          </div>
-        </CardContent>
-      </Card>
+  <CardContent>
+    <h3 className="text-lg font-semibold">Add New Expense</h3>
+    <div className="flex flex-col sm:flex-row gap-4 mt-4">
+      <select
+        className="p-2 text-black rounded w-full sm:w-auto"
+        value={newExpense.category}
+        onChange={(e) => setNewExpense({ ...newExpense, category: e.target.value })}
+      >
+        <option value="">Select Category</option>
+        {categories.map((cat) => (
+          <option key={cat} value={cat}>{cat}</option>
+        ))}
+      </select>
+      <input
+        type="number"
+        placeholder="Amount"
+        className="p-2 text-black rounded w-full sm:max-w-xs"
+        value={newExpense.amount}
+        onChange={(e) => setNewExpense({ ...newExpense, amount: e.target.value })}
+      />
+      <Button className="bg-green-500 w-full sm:w-auto" onClick={addExpense}><FaPlus /></Button>
+    </div>
+  </CardContent>
+</Card>
 
       {/* Expenses List */}
       <Card className="mb-6">
