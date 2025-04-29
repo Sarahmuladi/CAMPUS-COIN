@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { FaPlus, FaExclamationTriangle } from "react-icons/fa";
 import { Button, Card, CardContent } from "../../components/ui";
 import { PieChart, Pie, Cell, Tooltip } from "recharts";
-
+import { AuthContext } from "../../components/Context/AuthContext";
 
 const SmartBudgeting = () => {
   const [income, setIncome] = useState("");
@@ -12,12 +12,16 @@ const SmartBudgeting = () => {
   const [amount, setAmount] = useState("");
   const [budgetData, setBudgetData] = useState(null); 
 
+  const { user } = useContext(AuthContext);
+
   const COLORS = ["#FF5733", "#2ECC71", "#FFC300", "#3498DB", "#8E44AD"];
 
   // Fetch data on component mount
   useEffect(() => {
     axios
-      .get("https://campus-coin-backend.onrender.com/api/savings/get")
+      .get("https://campus-coin-backend.onrender.com/api/savings/get", {
+        params: { userId: user._id }, // Pass userId as a query parameter
+      })
       .then((response) => {
         const data = response.data[0] || {}; 
         setIncome(data.income || "");
@@ -26,7 +30,7 @@ const SmartBudgeting = () => {
       .catch((error) => {
         console.error("Error fetching budget data", error);
       });
-  }, []);
+  }, [user._id]);
 
   const addExpense = () => {
     if (category && amount > 0) {
@@ -49,7 +53,7 @@ const SmartBudgeting = () => {
     const budget = {
       income,
       expenses,
-      
+      userId: user._id, // Include userId in the budget data
     };
 
     axios
