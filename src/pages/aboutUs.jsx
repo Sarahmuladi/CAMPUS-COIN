@@ -101,7 +101,7 @@ const coreValues = [
 // Team Members Data (Replace Images with Real Paths)
 const teamMembers = [
   {
-    name: "Sarah M. Muradi",
+    name: "Sarah Muladi",
     role: "Founder & CEO, Lead Developer",
     image: "/Images/img13.JPG",
   },

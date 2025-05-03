@@ -137,10 +137,6 @@ const Home = () => {
   {/* Overlay for better text contrast */}
   <div className="absolute inset-0 bg-blue-950 opacity-50"></div>
  
-
-  
-
-
   {/* Content Container */}
   <div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-6">
     
@@ -191,12 +187,13 @@ const Home = () => {
           <SwiperSlide key={index}>
             <div className="relative h-[500px] w-full bg-cover bg-center rounded-xl shadow-lg flex flex-col items-center justify-center text-white px-6"
               style={{ backgroundImage: `url(${feature.image})` }}>
+            <div className="absolute inset-0 bg-blue-950 opacity-50"></div>  
               
               <div className="absolute inset-0 bg-opacity-50 rounded-xl"></div>
 
               <div className="relative z-10 text-center">
-                <h4 className="text-2xl font-semibold text-text drop-shadow-lg">{feature.title}</h4>
-                <p className="mt-3 text-lg drop-shadow-md text-text-secondary">{feature.description}</p>
+                <h4 className="text-2xl font-semibold text-amber-100 drop-shadow-lg">{feature.title}</h4>
+                <p className="mt-3 text-lg drop-shadow-md text-amber-50">{feature.description}</p>
               </div>
             </div>
           </SwiperSlide>

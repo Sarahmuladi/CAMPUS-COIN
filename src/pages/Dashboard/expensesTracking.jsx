@@ -44,7 +44,7 @@ const ExpenseTracking = () => {
  
   const deleteExpense = async (id) => {
     try {
-      await axios.delete(`https://campus-coin-backend.onrender.com/api/expenses/delete/${id}`);
+      await axios.delete(`https://campus-coin-backend.onrender.com/api/expenses/delete/${_id}`);
         setExpenses(expenses.filter((expense) => expense._id !== id));
       
     } catch (error) {

@@ -1,5 +1,5 @@
 import React from 'react'
-import { FaPiggyBank, FaChartLine, FaLock, FaBell, FaUsers } from "react-icons/fa";
+import { FaPiggyBank, FaChartLine, FaLock, FaBell, FaUsers, FaCalculator } from "react-icons/fa";
 import { SiActualbudget } from 'react-icons/si';
 import { useNavigate } from 'react-router-dom';
 import { FaMobileAlt } from 'react-icons/fa';
@@ -74,7 +74,7 @@ const features = [
     description: "Receive reminders and alerts for upcoming expenses and savings goals.",
   },
   {
-    icon: < SiActualbudget />,
+    icon: < FaCalculator />,
     title: "Smart Budgeting",
     description: "Plan your spending with monthly budgets for food, transport, and more, so you never overspend"
   },
