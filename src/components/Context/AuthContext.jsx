@@ -18,9 +18,6 @@ export const AuthProvider = ({ children }) => {
             const storedAccessToken = localStorage.getItem("accessToken");
             const storedRefreshToken = localStorage.getItem("refreshToken");
 
-            console.log("Stored Access Token:", storedAccessToken);
-            console.log("Stored Refresh Token:", storedRefreshToken);
-
             if (storedAccessToken) {
                 try {
                     const decoded = jwtDecode(storedAccessToken);
@@ -32,7 +29,7 @@ export const AuthProvider = ({ children }) => {
                     setTimeout(refreshToken, expiryTime - 60000); // Refresh 1 min before expiry
 
                 } catch (error) {
-                    console.error("Invalid token:", error);
+                    //console.error("Invalid token:", error);
                     signout();
                 }
             } else if (storedRefreshToken) {
@@ -142,3 +139,5 @@ export const AuthProvider = ({ children }) => {
         </AuthContext.Provider>
     );
 };
+
+

@@ -12,6 +12,8 @@ const ExpenseTracking = () => {
   const categories = ["Food", "Transport", "Shopping", "Entertainment", "Bills", "Other"];
 
       const { user } = useContext(AuthContext);
+      const token = accessToken || localStorage.getItem("accessToken");
+
 
   // Fetch expenses from backend on component mount
   useEffect(() => {
@@ -25,18 +27,28 @@ const ExpenseTracking = () => {
 
   const addExpense = () => {
     if (newExpense.category && newExpense.amount) {
-
-      const body = {
-        ...newExpense,
-        userId: user._id,
-      }
+      
       // Send POST request to backend
-      axios.post("https://campus-coin-backend.onrender.com/api/expenses/create", body)
+      axios.post("https://campus-coin-backend.onrender.com/api/expenses/create",{
+        userId: user._id,
+        category: newExpense.category,
+        amount: newExpense.amount,
+        
+       
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
+      })
+      
         .then(response => {
           setExpenses([...expenses, response.data]);
           setNewExpense({ category: "", amount: "" });
+          console.log("Expense added successfully", response.data);
         })
         .catch(error => console.error("Error adding expense", error));
+        
     }
   };
 
