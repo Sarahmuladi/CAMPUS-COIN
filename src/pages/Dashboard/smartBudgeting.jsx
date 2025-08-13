@@ -10,23 +10,36 @@ const SmartBudgeting = () => {
   const [expenses, setExpenses] = useState([]);
   const [category, setCategory] = useState("");
   const [amount, setAmount] = useState("");
-  const { user, token } = useContext(AuthContext);  // make sure you have token here
+  const { user, token } = useContext(AuthContext);
 
   const COLORS = ["#FF5733", "#2ECC71", "#FFC300", "#3498DB", "#8E44AD"];
 
+  // Load data from localStorage first
   useEffect(() => {
-    // Fetch saved budget on mount
+    const savedBudgetData = localStorage.getItem('smartBudgetData');
+    if (savedBudgetData) {
+      const data = JSON.parse(savedBudgetData);
+      setIncome(data.income || "");
+      setExpenses(data.expenses || []);
+    }
+
+    // Then fetch from API
     axios
       .get("https://campus-coin-backend.onrender.com/api/savings/get", {
         params: { userId: user._id },
         headers: {
-          Authorization: `Bearer ${token}`, // Add token if needed by backend
+          Authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
-        const data = response.data[0] || {}; 
+        const data = response.data[0] || {};
         setIncome(data.income || "");
         setExpenses(data.expenses || []);
+        // Update localStorage with latest API data
+        localStorage.setItem('smartBudgetData', JSON.stringify({
+          income: data.income || "",
+          expenses: data.expenses || []
+        }));
       })
       .catch((error) => {
         console.error("Error fetching budget data", error);
@@ -35,10 +48,29 @@ const SmartBudgeting = () => {
 
   const addExpense = () => {
     if (category && amount > 0) {
-      setExpenses([...expenses, { category, amount: Number(amount) }]);
+      const updatedExpenses = [...expenses, { category, amount: Number(amount) }];
+      setExpenses(updatedExpenses);
       setCategory("");
       setAmount("");
+      
+      // Update localStorage when adding expense
+      localStorage.setItem('smartBudgetData', JSON.stringify({
+        income,
+        expenses: updatedExpenses
+      }));
     }
+  };
+
+  // Update income handler
+  const handleIncomeChange = (value) => {
+    const newIncome = Number(value);
+    setIncome(newIncome);
+    
+    // Update localStorage when income changes
+    localStorage.setItem('smartBudgetData', JSON.stringify({
+      income: newIncome,
+      expenses
+    }));
   };
 
   const totalExpenses = expenses.reduce((sum, exp) => sum + exp.amount, 0);
@@ -57,11 +89,16 @@ const SmartBudgeting = () => {
       userId: user._id,
     };
 
-    // Use PUT if updating existing budget (adjust backend accordingly)
+    // Save to both localStorage and API
+    localStorage.setItem('smartBudgetData', JSON.stringify({
+      income,
+      expenses
+    }));
+
     axios
       .post("https://campus-coin-backend.onrender.com/api/savings/add", budget, {
         headers: {
-          Authorization: `Bearer ${token}`, // send auth token
+          Authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
@@ -88,7 +125,7 @@ const SmartBudgeting = () => {
             <input
               type="number"
               value={income}
-              onChange={(e) => setIncome(Number(e.target.value))}
+              onChange={(e) => handleIncomeChange(e.target.value)}
               className="w-full mt-4 p-2 text-black rounded"
               placeholder="Enter your monthly income"
             />

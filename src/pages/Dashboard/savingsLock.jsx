@@ -14,7 +14,19 @@ const SavingsLock = () => {
   const [startTime, setStartTime] = useState(0);
   const [endTime, setEndTime] = useState(0);
 
-  const navigate = useNavigate();
+  // Load lock data from localStorage when component mounts
+  useEffect(() => {
+    const savedLockData = localStorage.getItem('savingsLockData');
+    if (savedLockData) {
+      const data = JSON.parse(savedLockData);
+      setLockAmount(data.lockAmount);
+      setLocked(data.locked);
+      setStartDate(data.startDate);
+      setStartTime(data.startTime);
+      setEndTime(data.endTime);
+      setGoalReached(Date.now() >= data.endTime);
+    }
+  }, []);
 
   const handleLockSavings = () => {
     const now = Date.now();
@@ -24,9 +36,20 @@ const SavingsLock = () => {
         : lockDuration * 30 * 24 * 60 * 60 * 1000;
     const end = now + durationInMs;
 
-    setStartDate(new Date(now).toLocaleString());
-    setStartTime(now);
-    setEndTime(end);
+    const lockData = {
+      lockAmount,
+      locked: true,
+      startDate: new Date(now).toLocaleString(),
+      startTime: now,
+      endTime: end,
+    };
+
+    // Save to localStorage
+    localStorage.setItem('savingsLockData', JSON.stringify(lockData));
+
+    setStartDate(lockData.startDate);
+    setStartTime(lockData.startTime);
+    setEndTime(lockData.endTime);
     setTimer(durationInMs);
     setLocked(true);
     setGoalReached(false);
@@ -42,6 +65,8 @@ const SavingsLock = () => {
           clearInterval(interval);
           setTimer(0);
           setGoalReached(true);
+          // Clear localStorage when lock period is complete
+          localStorage.removeItem('savingsLockData');
         } else {
           setTimer(remaining);
         }
