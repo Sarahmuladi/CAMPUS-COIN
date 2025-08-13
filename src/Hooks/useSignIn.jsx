@@ -28,9 +28,7 @@ export const useSignIn = () => {
             localStorage.setItem('user', JSON.stringify(json))
             //update the authContext
             dispatch({type: 'SIGN IN', payload: json})
-
             setIsLoading(false)
-
         }
 
     }
