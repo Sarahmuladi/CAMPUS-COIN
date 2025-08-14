@@ -17,6 +17,15 @@ const SavingsGoal = () => {
 
   useEffect(() => {
     const fetchGoals = async () => {
+
+      // get the token from the local storage
+      const token = localStorage.getItem("accessToken");
+
+      // if the token is not found, return
+      if (!token) {
+        return;
+      }
+
       try {
         const response = await axios.get("https://campus-coin-backend.onrender.com/api/savingsGoal/get",
           {
@@ -46,6 +55,15 @@ const SavingsGoal = () => {
       };
 
       try {
+
+        // get the token from the local storage
+        const token = localStorage.getItem("accessToken");
+
+        // if the token is not found, return
+        if (!token) {
+          return;
+        }
+        
         const response = await axios.post(
           "https://campus-coin-backend.onrender.com/api/savingsGoal/create",
            newGoal ,
