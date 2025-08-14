@@ -18,7 +18,14 @@ const SavingsGoal = () => {
   useEffect(() => {
     const fetchGoals = async () => {
       try {
-        const response = await axios.get("https://campus-coin-backend.onrender.com/api/savingsGoal/get");
+        const response = await axios.get("https://campus-coin-backend.onrender.com/api/savingsGoal/get",
+          {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+        );
         setGoals(response.data);
       } catch (error) {
         console.error("Error fetching goals:", error);
@@ -41,8 +48,13 @@ const SavingsGoal = () => {
       try {
         const response = await axios.post(
           "https://campus-coin-backend.onrender.com/api/savingsGoal/create",
-          { newGoal },
-          { headers: { "Content-Type": "application/json" } }
+           newGoal ,
+          {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
         );
 
         const addedGoal = response.data;

@@ -10,17 +10,18 @@ const SmartBudgeting = () => {
   const [expenses, setExpenses] = useState([]);
   const [category, setCategory] = useState("");
   const [amount, setAmount] = useState("");
-  const [budgetData, setBudgetData] = useState(null); 
-
-  const { user } = useContext(AuthContext);
+  const { user, token } = useContext(AuthContext);  // make sure you have token here
 
   const COLORS = ["#FF5733", "#2ECC71", "#FFC300", "#3498DB", "#8E44AD"];
 
-  // Fetch data on component mount
   useEffect(() => {
+    // Fetch saved budget on mount
     axios
       .get("https://campus-coin-backend.onrender.com/api/savings/get", {
-        params: { userId: user._id }, // Pass userId as a query parameter
+        params: { userId: user._id },
+        headers: {
+          Authorization: `Bearer ${token}`, // Add token if needed by backend
+        },
       })
       .then((response) => {
         const data = response.data[0] || {}; 
@@ -30,7 +31,7 @@ const SmartBudgeting = () => {
       .catch((error) => {
         console.error("Error fetching budget data", error);
       });
-  }, [user._id]);
+  }, [user._id, token]);
 
   const addExpense = () => {
     if (category && amount > 0) {
@@ -53,18 +54,24 @@ const SmartBudgeting = () => {
     const budget = {
       income,
       expenses,
-      userId: user._id, // Include userId in the budget data
+      userId: user._id,
     };
 
+    // Use PUT if updating existing budget (adjust backend accordingly)
     axios
-      .post("https://campus-coin-backend.onrender.com/api/savings/add", budget)
+      .post("https://campus-coin-backend.onrender.com/api/savings/add", budget, {
+        headers: {
+          Authorization: `Bearer ${token}`, // send auth token
+        },
+      })
       .then((response) => {
         console.log("Budget saved successfully", response.data);
+        alert("Budget saved successfully");
       })
       .catch((error) => {
         console.error("Error saving budget data", error);
+        alert("Failed to save budget");
       });
-      alert("budget saved successfully")
   };
 
   return (
@@ -162,4 +169,5 @@ const SmartBudgeting = () => {
 };
 
 export default SmartBudgeting;
+
 

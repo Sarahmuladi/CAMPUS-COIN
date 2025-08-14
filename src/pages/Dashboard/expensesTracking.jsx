@@ -12,34 +12,40 @@ const ExpenseTracking = () => {
   const categories = ["Food", "Transport", "Shopping", "Entertainment", "Bills", "Other"];
 
       const { user } = useContext(AuthContext);
-      const token = accessToken || localStorage.getItem("accessToken");
+      const token = localStorage.getItem("accessToken");
+
 
 
   // Fetch expenses from backend on component mount
   useEffect(() => {
-    axios.get("https://campus-coin-backend.onrender.com/api/expenses/get")
-      .then(response => {
-        setExpenses(response.data);
-        console.log(expenses)
-      })
-      .catch(error => console.error("Error fetching expenses", error));
-  }, []);
+  axios.get("https://campus-coin-backend.onrender.com/api/expenses/get", {
+     params: { userId: user.id },
+     headers: {
+       Authorization: `Bearer ${token}`,
+       "Content-Type": "application/json"
+     }
+  })
+    .then((response) => {
+      setExpenses(response.data);
+    })
+    .catch(error => console.error("Error fetching expenses", error));
+}, [user.id]);
 
+//Adding a new expense
   const addExpense = () => {
     if (newExpense.category && newExpense.amount) {
       
       // Send POST request to backend
       axios.post("https://campus-coin-backend.onrender.com/api/expenses/create",{
-        userId: user._id,
+        // userId: user.id,
+        amount: Number(newExpense.amount),
         category: newExpense.category,
-        amount: newExpense.amount,
-        
        
-      }, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json"
-        }
+       }, {
+         headers: {
+           Authorization: `Bearer ${token}`,
+           "Content-Type": "application/json"
+         }
       })
       
         .then(response => {
@@ -53,10 +59,17 @@ const ExpenseTracking = () => {
   };
 
   
- 
+ // Delete an expense
   const deleteExpense = async (id) => {
     try {
-      await axios.delete(`https://campus-coin-backend.onrender.com/api/expenses/delete/${_id}`);
+      await axios.delete(`https://campus-coin-backend.onrender.com/api/expenses/delete/${id}`,
+        {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json"
+    }
+    }
+      );
         setExpenses(expenses.filter((expense) => expense._id !== id));
       
     } catch (error) {

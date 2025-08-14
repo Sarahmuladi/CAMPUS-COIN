@@ -1,36 +1,61 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Card, CardContent } from '@/components/ui';
-import { FaMobileAlt, FaMoneyBillWave, FaHistory } from 'react-icons/fa';
+import { FaMobileAlt, FaHistory } from 'react-icons/fa';
 import axios from 'axios';
 
 const MobileMoney = () => {
   const services = ['M-Pesa', 'Airtel Money', 'HaloPesa', 'Mixx By Yas'];
   const [transactions, setTransactions] = useState([]);
+  const token = localStorage.getItem("accessToken");
 
   useEffect(() => {
-    // Fetch transaction history
-    axios.get('https://campus-coin-backend.onrender.com/api/transactions/get')
-      .then(response => setTransactions(response.data))
-      .catch(error => console.error('Error fetching transactions:', error));
-  }, []);
+    // Fetch transaction history with auth header
+    axios.get('https://campus-coin-backend.onrender.com/api/transactions/get', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then(response => setTransactions(response.data))
+    .catch(error => console.error('Error fetching transactions:', error));
+  }, [token]);
 
   const handleTransaction = async (type, service) => {
-    const amount = prompt(`Enter amount to ${type.toLowerCase()}:`);
-    const phone = prompt(`Enter phone number:`);
+    const amountStr = prompt(`Enter amount to ${type.toLowerCase()}:`);
+    const phone = prompt("Enter phone number:");
 
-    if (!amount || !phone) return alert("Transaction cancelled!");
+    if (!amountStr || !phone) {
+      return alert("Transaction cancelled!");
+    }
+
+    const amount = Number(amountStr);
+    if (isNaN(amount) || amount <= 0) {
+      return alert("Please enter a valid positive amount.");
+    }
 
     try {
-      const response = await axios.post(`https://campus-coin-backend.onrender.com/api/${type.toLowerCase()}`, {
-        service,
-        amount,
-        phone,
-      });
+      const response = await axios.post(
+        `https://campus-coin-backend.onrender.com/api/${type.toLowerCase()}`,
+        { service, amount, phone },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
 
       alert(response.data.message);
+
+      // Refresh transactions after success
+      const txns = await axios.get('https://campus-coin-backend.onrender.com/api/transactions/get', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setTransactions(txns.data);
     } catch (error) {
       alert("Transaction failed!");
+      console.error(error);
     }
+  };
+
+  // Format date nicely
+  const formatDate = (dateStr) => {
+    const date = new Date(dateStr);
+    return date.toLocaleString();
   };
 
   return (
@@ -60,8 +85,8 @@ const MobileMoney = () => {
           ) : (
             <ul>
               {transactions.map((txn) => (
-                <li key={txn.id} className="border-b border-gray-700 py-2">
-                  {txn.type} of {txn.amount} via {txn.service} on {txn.date}
+                <li key={txn._id} className="border-b border-gray-700 py-2">
+                  {txn.type} of {txn.amount} TZS via {txn.service} on {formatDate(txn.date)}
                 </li>
               ))}
             </ul>
@@ -73,4 +98,3 @@ const MobileMoney = () => {
 };
 
 export default MobileMoney;
-

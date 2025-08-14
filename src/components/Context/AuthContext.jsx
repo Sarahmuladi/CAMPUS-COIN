@@ -29,7 +29,6 @@ export const AuthProvider = ({ children }) => {
                     setTimeout(refreshToken, expiryTime - 60000); // Refresh 1 min before expiry
 
                 } catch (error) {
-                    //console.error("Invalid token:", error);
                     signout();
                 }
             } else if (storedRefreshToken) {
